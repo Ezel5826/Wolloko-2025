@@ -25,14 +25,11 @@ def crear_barcos_hor(long:list,cord_piv,grilla,lista):
     print(barco)
     for i in range(1,long):
         barco.append([cord_piv[0],cord_piv[1]+i])
-    print("after",barco)
-    print(f"esto es el barco {barco} dentro de crear barco")
     print(deteccion_limite(barco,grilla))
     if deteccion_limite(barco,grilla):
         lista=almacenar_barco(barco,lista,grilla)
         return barco,lista
     else:
-        print(f"se reeleccionará el barco mediante la funcion reeleccion_barco")
         barco,lista=reeleccion_barco(lista,grilla,long,1)
         return barco,lista
     
@@ -41,18 +38,14 @@ def crear_barcos_vert(long,cord_piv,grilla,lista):
     print(barco)
     for i in range(1,long):
         barco.append([cord_piv[0]+i,cord_piv[1]])
-    print("after",barco)
-    print(f"esto es el barco {barco} dentro de crear barco")
     print(deteccion_limite(barco,grilla))
     if deteccion_limite(barco,grilla):
         lista=almacenar_barco(barco,lista,grilla)
         return barco,lista
     else:
-        print(f"se reeleccionará el barco mediante la funcion reeleccion_barco")
         barco,lista=reeleccion_barco(lista,grilla,long)
         return barco,lista
     
-
 def barco_con_sentido(long,cord_piv,grilla,lista, sent):
     long1=long[0]
     long.pop(0)
@@ -61,27 +54,6 @@ def barco_con_sentido(long,cord_piv,grilla,lista, sent):
     else:
         return crear_barcos_vert(long1,cord_piv,grilla,lista)
 
-# def crear_barcos(cord_pivote,grilla,lista_barco):    
-#     longitud=int(input("ingrese un numero entre 1-4"))
-#     vert_hori=randint(0,1)
-#     barco_testeo=[]
-#     if 0 < longitud < 5:
-#         if vert_hori:
-#             for i in range(1,longitud):
-#                 barco=barco_testeo.append(cord_pivote[1]+i)
-#         else:
-#             for j in range(1,longitud):
-#                 barco=barco_testeo.append(cord_pivote[0]+j)
-#         lista_barcos=almacenar_barco(barco,lista_barco,grilla)
-#         if deteccion_limite(barco,grilla):        
-#             return barco,lista_barco
-#         else:
-#             #barco,lista_barcos = reeleccion_barco(sentido_obtenido,grilla,lista_barco)
-    
-#             return barco,lista_barcos
-#     else:
-#         raise IndexError("se fue de rango")
-
 def reeleccion_barco(lista_barcos,grilla,long,H_sen=0):
     j=0
     while True:
@@ -89,7 +61,6 @@ def reeleccion_barco(lista_barcos,grilla,long,H_sen=0):
             print("se cumple?")
             return None,lista_barcos
         barco=[[randint(0,ancho-1),randint(0,alto-1)]]
-        print("esto es el barco dentro de reeleccion_barco",barco)
         x,y=coordenadas_barco(barco)
         for i in range(1,long):
             if H_sen:
@@ -111,13 +82,11 @@ def deteccion_limite(barco,grilla):
     contador=0
     for i in range(len(barco)):
         x,y=coordenadas_barco([barco[i]])
-        print(f"esto es la coordenada {x} {y} y e I {i}")
         if no_pasa_limite(x,y,grilla) and grilla_vacia(x,y,grilla):
             contador+=1
     if contador == len(barco):
         return True
     else:
-        print("no se puede colocar el barco")
         return False
 
 def almacenar_barco(barco:tuple,lista:list,grilla:list):
@@ -129,9 +98,7 @@ def almacenar_barco(barco:tuple,lista:list,grilla:list):
     return lista
 
 def agregar_adyacentes(barco, grilla):
-    print(f"este es el barco antes de entrar al for {barco}")
     for i in range(len(barco)):
-        print(f"estas son sus cordenadas enviadas al for{barco[i]}")
         x,y=coordenadas_barco([barco[i]])
         for k in range(x-1,x+2):
             for l in range(y-1,y+2):
@@ -145,8 +112,7 @@ def enviar_disparos(disparo,grilla:list):
             grilla[x][y]=3
 
     else:
-        print("No se ha tocado ningún barco. agua")
-    return grilla
+        return grilla
 
 def elegir_disparo(lista:list):
     while True:
@@ -198,53 +164,8 @@ def contador_barcos(grilla:list):
 def limite_de_barcos(barcos:tuple,cantidad:int):
     return barcos==cantidad
 
+
 def main():
-    lista_ayuda=[]
-    almacen_barcos=[]
-    almacen_disparos=[]
-    grilla=grilla_juego(alto,ancho)
-    i=1
-    contador=0
-    contador_2=0
-    barcos=int(input(f"ingrese un numero menor a {(((len(grilla)**2) //9) * 2)+2} "))
-    barco=(randint(0,ancho-1), randint(0,alto-1))
-    x_barco,y_barco=coordenadas_barco(barco)
-    while True:
-        print("loop",i)
-        if grilla_vacia(x_barco,y_barco,grilla) and not (limite_de_barcos(barcos,contador_2)):
-            almacen_barcos=almacenar_barco(barco,almacen_barcos,grilla)
-            grilla=insertar_barco(grilla,barco)
-            grilla=agregar_adyacentes(barco,grilla)
-            x_barco,y_barco=coordenadas_barco(barco)
-            contador_2+=1
-
-        print(f"contador de barcos pocisionados {contador_2}")
-        
-        #print(f"¿es igual? {limite_de_barcos(barcos,contador_2)}")
-        
-        if limite_de_barcos(barcos,contador_2):
-            
-            disparo=elegir_disparo(almacen_disparos)
-            print(f"disparo actual: {disparo}")
-            x_disparo,y_disparo=coordenadas_disparo(disparo)
-            grilla=enviar_disparos(x_disparo,y_disparo,grilla)
-            almacen_disparos=almacenar_disparos(disparo,grilla,almacen_disparos)
-            print(f"esto es la lista que contiene las coordenadas: {sorted(almacen_disparos)}")
-            contador+=1
-        i+=1
-        for hola in grilla:
-            print(hola)
-            
-        if contador_2 == contador_destruidos(grilla):
-            break
-    print("\n")
-    print("----------------------------------\n")
-
-    for hola in grilla:
-        print(hola)
-
-
-def main_2():
     grilla=grilla_juego(alto,ancho)
     lista_cord_barcos=[]
     lista_cord_disp=[]
@@ -271,7 +192,5 @@ def main_2():
         print("\n")
         if contador_barcos(grilla)==0:
             return
-"se terminó"
 
-#main()
-main_2()
+main()
