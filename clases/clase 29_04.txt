@@ -1,0 +1,41 @@
+#programacion orientado a objetos
+
+#programa principal - obejtos
+#un objeto es una simplificacion de  una parte del mundo real, es un modelo con atributos (dan cuenta de sus caracateristicas) y comportamientos(pueden hacer cosas).
+#los atributos son supceptibles de recibir valores. los atributos son variables que pertenencen al objeto
+#variable es el nombre que le doy a un valor que puede cambiar.
+#                   { Atributo : Variable }; el atributo tambien recibe un solo tipo de dato.
+#                   { comportameindo: Funcion }; el comportamiento puede recibir varios tipos de datos.
+#los comportamientos son funciones que pertenecen al objeto, son metodos. los metodos son funciones que pertenecen
+#a un objeto.  
+
+#objeto ahce 2 cosas. interactuao con otros objetos, o cambia su estado interno
+
+#estado interno: suma de sus valores de atributos. si tengo una persona que tiene {peso:100kg, altura:1.80m} su estado interno es 100kg y 1.80m.
+#si una persona come, 1kg, su estado interno cambia, su peso pasa a ser 101kg. el comportamiento es comer.
+#  si una persona hace ejercicio, la persona baja 1kg, el estado interno cambia, su peso pasa a ser 100kg. el comportamiento es hacer ejercicio.
+
+#interactua con otros objetos: llama a sus metodos o accede a sus atributos.
+
+#en objetos solo las funciones pueden cambiar el estado interno de un objeto. los atributos son solo para leer, no se pueden cambiar.
+
+#dependiendo del problema importan o no algunos atributos. por ejemplo, si tengo una persona que tiene {peso:100kg, altura:1.80m} y quiero saber si es obeso, no me importa la altura, solo el peso. entonces el atributo altura no es importante para el problema.
+
+#todo esto se llama encapsulacion. encapsulacion es la forma de agrupar atributos y comportamientos en un solo objeto.
+
+
+
+ 
+#Uml es un lenguaje de modelado de objetos.
+
+#ejemplo de uml:
+
+# -------------------
+# |     nombre      |
+# |-----------------|
+# |   atributos     |
+# |-----------------|
+# | comportamientos |
+# -------------------
+
+#actividada. imaginarse un programa donde haya un par de objetos(definirlos atributos y comportamientos) 
