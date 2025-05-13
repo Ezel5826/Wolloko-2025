@@ -17,11 +17,13 @@ def move_serpent(serpent,grid):
     for i in range(serpent[1]):
         if i + 1 <= serpent[1]-1:
             serpent[0][i] = serpent[0][i+1]
+    hola=serpent[0]
+    print(f"esta es la variable{hola}")
+    hola[1][0] = hola[1][0] + 1
+    print(f"esta es la variable modificada{hola}")
     serpent[0][1][0] = serpent[0][1][0] + serpent[3][0]
     serpent[0][1][1] = serpent[0][1][1] + serpent[3][1]
-    serpent[0][0][0] = serpent[0][0][0] - serpent[3][0]
-    serpent[0][0][1] = serpent[0][0][1] - serpent[3][1]
-    pr
+    print(serpent[0])
     if in_grid(tail,grid):
         grid[tail[0]][tail[1]] = 0
     return serpent, grid
