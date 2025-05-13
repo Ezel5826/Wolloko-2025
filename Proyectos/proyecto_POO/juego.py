@@ -30,12 +30,34 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_1:
-                    Serpiente[3] = 1
+                if event.key == pygame.K_a:
+                    print(f"antes del desastre {Serpiente[3]}")
+
+                    Serpiente[3] = (0,-1)#IZQUIERDA
+                    
+                    print(f"despues del desastre {Serpiente[3]}")
                     # Serpiente,grilla_ = serpiente.move_serpent(Serpiente,grilla_)
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_0:
-                    Serpiente[3] = -1
+                if event.key == pygame.K_d:
+                    print(f"antes del desastre {Serpiente[3]}")
+
+                    Serpiente[3] = (0,1)#DERECHA
+                    
+                    print(f"despues del desastre {Serpiente[3]}")
+
+
+                if event.key == pygame.K_s:
+                    print(f"antes del desastre {Serpiente[3]}")
+
+                    Serpiente[3] = (1,0)#ARRIBA
+
+                    print(f"despues del desastre {Serpiente[3]}")
+                    
+                if event.key == pygame.K_w:
+                    print(f"antes del desastre {Serpiente[3]}")
+
+                    Serpiente[3] = (-1,0)#ABAJO
+
+                    print(f"despues del desastre {Serpiente[3]}")
                     # Serpiente,grilla_=serpiente.move_serpent(Serpiente,grilla_)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_4:

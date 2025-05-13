@@ -2,21 +2,32 @@
 #conportamientos = mover, incrementar tamaño, obtener longitud
 
 def grilla():
-    return [[0 for i in range(20)] for _ in range(1)]
-def crear_serpiente(color:int=1, sense:int=1):
+    return [[0 for i in range(20)] for _ in range(20)]
+
+def crear_serpiente(color:int=1, sense:int=(0,1)):
     cordenadas=[[0,4],[0,5]]
     return [cordenadas,len(cordenadas),color,sense]
 
 def move_serpent(serpent,grid):
-    if serpent[3]==1:
+    if serpent[3]==(0,1):
         tail=serpent[0][0]
     else:
         tail=serpent[0][serpent[1]-1]
+    print(f"esta es la serpiente antes del ciclo {serpent[0]}")
     for i in range(serpent[1]):
-            serpent[0][i] = [serpent[0][i][0],serpent[0][i][1] + serpent[3]]
+        print(f"esta es la serpiente antes de la condicion {serpent[0]} e, i = {i}")
+        if i + 1 <= serpent[1]-1:
+            print(f"esta es la serpiente antes de modificarse {serpent[0]}, i = {i} y la cordenada siguiente {serpent[0][i+1]}")
+            serpent[0][i] = serpent[0][i+1]
+            print(f"esta es la serpiente despues de modificarse {serpent[0]} e, i = {i} y la cordenada siguiente {serpent[0][i+1]}")
+    print(f"serpiente antes de cambios{serpent[0]}")
+    print(serpent[0][1][0] + 1,serpent[0][1][0] + 1)
+    serpent[0][1][0] += serpent[3][0]
+    serpent[0][1][1] += serpent[3][1]
+    print(f"SERPIENTE MODIFICADAAAA{serpent[0]}")
     if in_grid(tail,grid):
         grid[tail[0]][tail[1]] = 0
-    return serpent,grid
+    return serpent, grid
 
 def increment_size(serpent):
     print(serpent[0])   
@@ -26,6 +37,12 @@ def increment_size(serpent):
     print(serpent[1])
     return serpent
 
+def eliminar_cola(grid,serpent):
+    for i in range(len(grid[0])):
+        for j in range(len(grid[0][0])):
+            for cords in serpent[0]:
+                pass
+
 
 def put_serpent(grid,serpent):
     print(serpent[0])
@@ -34,6 +51,8 @@ def put_serpent(grid,serpent):
             serpent[0][_][1] = 0
         if serpent[0][_][1] < 0:
             serpent[0][_][1] = 19
+        if serpent[0][_][0] > len(grid[0])-1:
+            serpent[0][_][0] = 0
     for i in range(serpent[1]):
         if in_grid(serpent[0][i],grid):
             if thers_nothing(serpent[0][i],grid):
