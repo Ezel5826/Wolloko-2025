@@ -5,6 +5,7 @@ def grilla(ancho,alto,long_serp=1,cant_food=1)->list[list,int,int]:
     return [[[0 for _ in range(ancho)] for _ in range(alto)],long_serp,cant_food]
 
 def increment_apple(grid:list,increment:bool):
+    
     if increment:
         grid[2]+=1
     else:

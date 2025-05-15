@@ -21,6 +21,10 @@ def grilla(grilla,dimensiones):
             elif grilla[alto][ancho] == 1:
                 cubozz=pygame.Rect(x,y,d_Cubos,d_Cubos)
                 pygame.draw.rect(screen,"green",cubozz,100)
+            elif grilla[alto][ancho] == 3:
+                cubozz=pygame.Rect(x,y,d_Cubos,d_Cubos)
+                pygame.draw.rect(screen,"red",cubozz,100)
+
 def main():
     Serpiente=serpiente.crear_serpiente()
     grilla_=serpiente.grilla()
