@@ -1,5 +1,7 @@
 import pygame
 import serpiente
+import Grilla
+import apple
 valores=(600,700)
 pygame.init()
 screen = pygame.display.set_mode(valores,pygame.RESIZABLE)
@@ -27,7 +29,8 @@ def grilla(grilla,dimensiones):
 
 def main():
     Serpiente=serpiente.crear_serpiente()
-    grilla_=serpiente.grilla()
+    grilla_=Grilla.crear_grilla(Grilla.alto,Grilla.ancho,len(Serpiente),1)
+    apple_=apple.apple(grilla_)
     running=True
     while running:
         for event in pygame.event.get():
@@ -72,6 +75,7 @@ def main():
         grilla(grilla_,Cambios_dimensionales_pantalla)
         Serpiente,grilla_=serpiente.move_serpent(Serpiente,grilla_)
         grilla_,Serpiente=serpiente.put_serpent(grilla_,Serpiente) 
+        grilla_,Serpiente=serpiente.eat_appl(Serpiente,grilla_)
         pygame.display.flip()
 
         clock.tick(10)  

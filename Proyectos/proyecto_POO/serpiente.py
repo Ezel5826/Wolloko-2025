@@ -1,16 +1,15 @@
 #atributos = coordenadas, tamaño, color, avance
 #conportamientos = mover, incrementar tamaño, obtener longitud
 from copy import deepcopy as dp
-
-def grilla():
-    return [[0 for i in range(20)] for _ in range(20)]
+from random import randint as rd
+import Grilla
 
 def crear_serpiente(color:int=1, sense:int=(0,0)):
     cordenadas=[[10,4],[10,5]]
     return [cordenadas,len(cordenadas),color,sense]
 
 def move_serpent(serpent,grid):
-    grid[3][1] = 3
+    
     tail=serpent[0][0]
     if not serpent[3]== (0,0):
         for i in range(serpent[1]):
@@ -34,23 +33,13 @@ def increment_size(serpent):
     return serpent
 
 
-def put_serpent(grid,serpent):
-    print(serpent[0])
-    for _ in range(serpent[1]):
-        if serpent[0][_][1] > len(grid[0])-1:
-            serpent[0][_][1] = 0
-        if serpent[0][_][1] < 0:
-            serpent[0][_][1] = 19
-        if serpent[0][_][0] > len(grid[0])-1:
-            serpent[0][_][0] = 0
-    for i in range(serpent[1]):
-        if in_grid(serpent[0][i],grid):
-            if thers_nothing(serpent[0][i],grid):
-                grid[serpent[0][i][0]][serpent[0][i][1]] = 1
+def eat_appl(serpent,grid,apple):
+    print(apple)
+    if apple == serpent[0][serpent[1]-1]:
+        serpent=increment_size(serpent)
+        grid[apple[0]][apple[1]] = 0
     return grid,serpent
-def eat_appl(apple,serpent,grid):
-    if apple[0]== serpent[0][1]-1:
-        increment_size(serpent)
+
 
 def in_grid(cords,grid):
     return 0 <= cords[1] <= len(grid[0])-1 
