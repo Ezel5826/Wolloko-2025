@@ -39,11 +39,12 @@
         
 # print("fin")
 
+# x= [[(0,0),True,1,2],[(0,0),False,1,1],[(0,0),True]]
+# for _ in range(len(x)):
+#     print(all(x[_]))
 
-
-x = [0,1]
-y = (0, -1)
-
-x += y
-
-print(x)
+hola=[0,1,2,2,3,4,5,6]
+print(hola.pop(1))
+print(hola)
+hola.append(3)
+print(hola)
