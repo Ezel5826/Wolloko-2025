@@ -1,5 +1,5 @@
-ancho=20
-alto=20
+ancho=15
+alto=15
 import apple as ap
 import serpiente as sp
 from random import randint as rn
@@ -20,7 +20,7 @@ def put_apple(grid:list[list,int,int],apple:list[(int,int),bool,int]):
     return grid
 
 def in_grid(cords,grid):
-    return 0 <= cords[1] <= len(grid[0])-1 
+    return 0 <= cords[1] <= len(grid[0])-1 and 0 <= cords[0] <= len(grid[0])-1 
 
 def thers_nothing(serpent,grid):
     return grid[0][serpent[0]][serpent[1]] == 0

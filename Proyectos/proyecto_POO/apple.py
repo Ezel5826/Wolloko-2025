@@ -2,17 +2,17 @@ from random import randint as rn
 import Grilla
 import serpiente
 
-def create_apple(grid:list[list,int,int]) -> list[(int,int),bool,int]:
+def create_apple(grid:list[list,int,int], count_apple=5) -> list[(int,int),bool,int]:
     state = True
     cords = [] 
     state_apple=[]
-    feed_increment_size = 1
+    feed_increment_size = -1
+    tipe="normal"
     j=0
-    counter=1
-    while counter!=j:
+    while count_apple!=j:
         cords = [rn(0,Grilla.alto-1), rn(0,Grilla.ancho-1)]
         if not (grid[0][cords[0]][cords[1]] == 1):
-            state_apple.append([cords,state,feed_increment_size])
+            state_apple.append([cords,state,feed_increment_size,tipe])
             cords=[]
             j+=1
     return state_apple
@@ -40,5 +40,5 @@ def pop_apple(apple,i):
     return apple
 
 def add_apple(apple,grid):
-    apple.extend(create_apple(grid))
+    apple.extend(create_apple(grid,1))
     return apple
