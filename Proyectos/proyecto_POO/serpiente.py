@@ -19,7 +19,7 @@ def move_serpent(serpent,grid):
     for i in range(2):
         serpent[0][serpent[1]-1][i] += serpent[3][i]
 
-    print(f"esta es la serpiente {serpent[0]}")
+    
     
     if in_grid(tail,grid):
         if not serpent[1]==1:
@@ -30,18 +30,16 @@ def move_serpent(serpent,grid):
             grid[0][tail[0] - serpent[3][0]][tail[1] - serpent[3][1]] = 0
 
     for _ in range(serpent[1]):
-        if serpent[0][_][1] == len(grid[0]):
+        if serpent[0][_][1] > len(grid[0])-1:
             serpent[0][_][1] = 0
-            break
-        if serpent[0][_][1] == 0:
-            serpent[0][_][1] = len(grid[0])-1
-            break
-        if serpent[0][_][0] == len(grid[0])-1:
+
+        if serpent[0][_][1] < 0:
+            serpent[0][_][1] = 19
+
+        if serpent[0][_][0] > len(grid[0])-1:
             serpent[0][_][0] = 0
-            break
-        if serpent[0][_][0] == 0:
-            serpent[0][_][0] = len(grid[0])-1
-            break
+        if serpent[0][_][0] < 0:
+            serpent[0][_][0] = 19
     return serpent, grid
 
 def dincrement_size(serpent,apple):
@@ -50,7 +48,7 @@ def dincrement_size(serpent,apple):
             serpent[0].insert(0,[serpent[0][0][0],serpent[0][0][1] -1])
             serpent[1]+=1
     else:
-        if not len(serpent[0])==1:
+        if not len(serpent[0]) ==2:
             for i in range(-2,apple[2]):
                 serpent[0].pop(0)
                 serpent[1]-=1

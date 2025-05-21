@@ -7,7 +7,7 @@ valores=(600,700)
 pygame.init()
 screen = pygame.display.set_mode(valores,pygame.RESIZABLE)
 clock = pygame.time.Clock()
-d_Cubos=30
+d_Cubos=25
 
 def grilla(grilla,dimensiones):
     alto_g = len(grilla[0])*d_Cubos
@@ -28,6 +28,9 @@ def grilla(grilla,dimensiones):
                 cubozz=pygame.Rect(y,x,d_Cubos,d_Cubos)
                 pygame.draw.rect(screen,"red",cubozz,100)
 
+def mostrar_manzanas(apple,dim):
+    cubozz=pygame.Rect(apple[0][0][0],apple[0][0][1],d_Cubos,d_Cubos)
+    pygame.draw.rect(screen,"purple",cubozz,100)
 def main():
     contador_habilidad=tm.perf_counter()
     Serpiente=serpiente.crear_serpiente()
@@ -77,6 +80,7 @@ def main():
             contador_habilidad=tm.perf_counter()
         screen.fill("black")
         Cambios_dimensionales_pantalla = pygame.display.get_surface().get_size()
+        mostrar_manzanas(apple,Cambios_dimensionales_pantalla)
         grilla(grilla_,Cambios_dimensionales_pantalla)
         Serpiente,grilla_=serpiente.move_serpent(Serpiente,grilla_)
         grilla_ = Grilla.put_serpent(grilla_,Serpiente) 
@@ -85,7 +89,7 @@ def main():
         apple_,grilla_ =apple.check_state(apple_,grilla_)
         pygame.display.flip()
 
-        clock.tick(1)  
+        clock.tick(10)  
 
     pygame.quit()
 main()

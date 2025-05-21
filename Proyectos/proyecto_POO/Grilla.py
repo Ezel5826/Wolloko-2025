@@ -1,5 +1,5 @@
-ancho=15
-alto=15
+ancho=20
+alto=20
 import apple as ap
 import serpiente as sp
 from random import randint as rn
