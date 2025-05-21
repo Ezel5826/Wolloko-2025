@@ -24,17 +24,28 @@
 
 #en principio que la grilla sea de valor opcional n*m y por otro lado, hay que ubicar c cantidad de elementros de manera aleatoria condiciones. dos elementos no pueden compartir ubicacion adyacente la cantidad de cosa para meter en el tablero tiene que ser menor al tablero.
 
-lista=[(1,2),(5,6),(7,8)]
-barco=((1,3),(3,6),(7,8))
-print(barco in lista)
-print((7,8) in lista)
+# lista=[(1,2),(5,6),(7,8)]
+# barco=((1,3),(3,6),(7,8))
+# print(barco in lista)
+# print((7,8) in lista)
 
-for j in range(len(barco)):
-    print(barco[j])
-    if barco[j] in lista:
-        print("esta")
+# for j in range(len(barco)):
+#     print(barco[j])
+#     if barco[j] in lista:
+#         print("esta")
         
-    else:
-        print("no esta")
+#     else:
+#         print("no esta")
         
-print("fin")
+# print("fin")
+
+# x= [[(0,0),True,1,2],[(0,0),False,1,1],[(0,0),True]]
+# for _ in range(len(x)):
+#     print(all(x[_]))
+holaa=-1
+hola=[0,1,2,2,3,4,5,6]
+print(hola.pop(1))
+print(hola)
+hola.append(3)
+print(hola)
+print(-1==False)
