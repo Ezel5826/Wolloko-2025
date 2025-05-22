@@ -1,41 +1,42 @@
 from random import randint as rn
-import Grilla
 import serpiente
-
-def create_apple(grid:list[list,int,int], count_apple=5,feed_increment_size = 1,tipe="normal",) -> list[(int,int),bool,int]:
+ancho=20
+alto=20
+def create_apple(count_apple=5,feed_increment_size = 1,tipe="normal",) -> list[(int,int),bool,int]:
     state = True
     cords = [] 
     state_apple=[]
     j=0
     while count_apple!=j:
-        cords = [rn(0,Grilla.alto-1), rn(0,Grilla.ancho-1)]
-        if not (grid[0][cords[0]][cords[1]] == 1):
-            state_apple.append([cords,state,feed_increment_size,tipe])
-            cords=[]
-            j+=1
+        cords = [rn(0,alto-1), rn(0,ancho-1)]
+        # if not repeatable_apple():
+        state_apple.append([cords,state,feed_increment_size,tipe])
+        cords=[]
+        j+=1
     return state_apple
     
-def increment_apple(increment:bool, apple, grid):    
-    if increment and len(apple) < 5:
-        apple=add_apple(apple,grid)
+def increment_apple(increment:bool, apple):    
+    if increment and len(apple) < 6:
+        apple=add_apple(apple)
     if not (increment) and not len(apple) == 1:
-            grid[0][apple[0][0][0]][apple[0][0][1]] = 0
             apple=pop_apple(apple,0)
 
     return apple
 
-def check_state(apple:list,grid):
+def check_state(apple:list):
     for i in range(len(apple)):
         if not all(apple[i]):
-            grid[0][apple[i][0][0]][apple[i][0][1]] = 0
             apple=pop_apple(apple,i)
-            apple=add_apple(apple,grid)
-    return apple,grid
+            apple=add_apple(apple)
+    return apple
 
 def pop_apple(apple,i):
     apple.pop(i)
     return apple
 
-def add_apple(apple,grid):
-    apple.extend(create_apple(grid,1))
+def add_apple(apple):
+    apple.extend(create_apple(1))
     return apple
+
+def repeatable_apple(apple,new_apple):
+    return apple[0]==new_apple
