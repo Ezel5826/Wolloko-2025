@@ -2,16 +2,17 @@ import pygame
 import serpiente
 import apple
 import time as tm
-valores=(600,700)
-ancho=20
-alto=20
-d_Cubos=30
-
+valores=(1600,900)
+ancho=15
+alto=15
+d_Cubos=50
+time=0
 pygame.init()
 normal_apple = pygame.image.load("Proyectos/proyecto_POO/images/manza_normal.png")
 gold_apple = pygame.image.load("Proyectos/proyecto_POO/images/manzana_de_oro.png")
 rotten_apple=pygame.image.load("Proyectos/proyecto_POO/images/manzana_podrida.png")
-serpent=pygame.image.load("Proyectos/proyecto_POO/images/serpiente-removebg-preview.png")
+serpent_body=pygame.image.load("Proyectos/proyecto_POO/images/snake_body.png")
+serpent_head=pygame.image.load("Proyectos/proyecto_POO/images/snake_head.png")
 screen = pygame.display.set_mode(valores,pygame.RESIZABLE)
 clock = pygame.time.Clock()
 
@@ -24,15 +25,10 @@ def mostrar_grilla(dimensiones):
         for ancho_ in range(ancho):
             x = alto_*d_Cubos+centrado_1
             y = ancho_*d_Cubos+centrado
-            if ancho_%2==0 and alto_%2==0:           
-                cubozz=pygame.Rect(y,x,d_Cubos,d_Cubos)
-                pygame.draw.rect(screen,"violet",cubozz,100)
-            else:
-                cubozz=pygame.Rect(y,x,d_Cubos,d_Cubos)
-                pygame.draw.rect(screen,"violet",cubozz,100)
-
-                
-def mostrar_serpent(serpent,dim,snake):
+            cubozz=pygame.Rect(y,x,d_Cubos,d_Cubos)
+            pygame.draw.rect(screen,"violet",cubozz,100)
+           
+def mostrar_serpent(serpent,dim,snake_body,snake_head,direccion):
     alto_g = alto*d_Cubos
     ancho_g = ancho*d_Cubos
     centrado = (dim[0] - (alto_g))/2
@@ -40,9 +36,26 @@ def mostrar_serpent(serpent,dim,snake):
     for _ in range(len(serpent[0])):
         x =serpent[0][_][0]*d_Cubos+centrado_1
         y =serpent[0][_][1]*d_Cubos+centrado
+        if _==len(serpent[0])-1:
+            snake_head= pygame.transform.scale(snake_head, (d_Cubos, d_Cubos))
 
-        snake= pygame.transform.scale(snake, (d_Cubos, d_Cubos))
-        screen.blit(snake , (y,x))
+            if direccion == (-1,0): #arriba
+                snake_head = pygame.transform.rotate(snake_head,90)
+                screen.blit(snake_head, (y,x)) 
+
+            if direccion == (1,0): #abajo
+                snake_head = pygame.transform.rotate(snake_head,-90)
+                screen.blit(snake_head, (y,x)) 
+
+            if direccion == (0,-1): #izquierda
+                snake_head = pygame.transform.flip(snake_head, True, False)
+                screen.blit(snake_head, (y,x)) 
+            if direccion == (0,1): #izquierda
+                snake_head = pygame.transform.rotate(snake_head, 0)
+                screen.blit(snake_head, (y,x))
+        else:
+            snake_body= pygame.transform.scale(snake_body, (d_Cubos, d_Cubos))
+            screen.blit(snake_body, (y,x))
 
 def mostrar_manzanas(apple_, dim,normal_apple,gold_apple,rotten_apple):
     alto_g = alto * d_Cubos
@@ -69,6 +82,7 @@ def main():
     Serpiente=serpiente.crear_serpiente()
     apple_=apple.create_apple(Serpiente)
     running=True
+    contador=0
     while running:
         counter_result=tm.perf_counter() - contador_habilidad
         for event in pygame.event.get():
@@ -97,21 +111,22 @@ def main():
                 if event.key == pygame.K_2:
                     apple_=apple.increment_apple(False,apple_)
         print(Serpiente[1])
-        # print(int(counter_result))
-        if counter_result > 10:     
+
+        if counter_result > 5:     
             apple.convert_tipe_apple(apple_)
             contador_habilidad=tm.perf_counter()
         screen.fill("black")
+
         Cambios_dimensionales_pantalla = pygame.display.get_surface().get_size()
         mostrar_grilla(Cambios_dimensionales_pantalla)
         mostrar_manzanas(apple_,Cambios_dimensionales_pantalla,normal_apple,gold_apple,rotten_apple)
-        mostrar_serpent(Serpiente,Cambios_dimensionales_pantalla,serpent)
+        mostrar_serpent(Serpiente,Cambios_dimensionales_pantalla,serpent_body,serpent_head,Serpiente[3])
         Serpiente=serpiente.move_serpent(Serpiente)
         Serpiente,apple_=serpiente.eat_appl(Serpiente,apple_)
         apple_ =apple.check_state(apple_,Serpiente)
         pygame.display.flip()
 
-        clock.tick(10)  
+        clock.tick(15)  
 
     pygame.quit()
 main()

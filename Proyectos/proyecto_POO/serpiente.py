@@ -2,8 +2,8 @@
 #conportamientos = mover, incrementar tamaño, obtener longitud
 from copy import deepcopy as dp
 from random import randint as rd
-ancho=20
-alto=20
+ancho=15
+alto=15
 
 def crear_serpiente(color:int=1, sense:int=(0,0)):
     cordenadas=[[10,4],[10,5]]
