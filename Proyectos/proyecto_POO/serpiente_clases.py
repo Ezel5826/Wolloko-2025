@@ -1,8 +1,8 @@
 from copy import deepcopy as dp
+
 class snake:
-    def __init__(self,cordenadas,color,ancho,alto):
+    def __init__(self,cordenadas,ancho,alto):
         self.cordenada=cordenadas
-        self.color=color
         self.sense=(0,0)
         self.ancho=ancho
         self.alto=alto 
@@ -20,7 +20,7 @@ class snake:
                 "K_UP": (-1, 0)
             }
         }
-
+        
     def mover(self):
         if not self.sense == (0,0):
             for i in range(len(self.cordenada)):
@@ -40,39 +40,36 @@ class snake:
 
     def elegir_comandos(self,eleccion):
         self.comando_elegido = self.movimientos_L.get(eleccion)
+    
+    def elegir_tipo_serpent(self,tipo):
+        self.tipe_serpent = tipo
 
     def cambiar_sentido(self,nueva_cord):
         self.sense=nueva_cord
 
     def eat_appl(self,apple):
-        for i in range(len(apple.cantidad)):
-            if apple.cantidad[i][0] == self.cordenada[len(self.cordenada)-1]:
-                apple.state = False
-                self.dencrement_size(apple.cantidad[i])
+        if apple.cantidad == self.cordenada[len(self.cordenada)-1]:
+            apple.state = False
+            self.dencrement_size(apple.cantidad)
 
     def dencrement_size(self,apple):
-
-        if apple.increment_size>=1:
-            for i in range(apple[2]):
-                self.cordenada[0].insert(0,[self.cordenada[0][0][0]-self.sense[0], self.cordenada[0][0][1]-self.sense[1]])
-        else:
-            if not len(self.cordenada) == 2:
-                for i in range(-2,apple[2]):
-                    self.cordenada[0].pop(0)
-                    self.cordenada[1]-=1
- 
+        increment=apple.increment_size
+        if increment>=1:
+            for i in range(increment):
+                self.cordenada.insert(0,[self.cordenada[0][0]-self.sense[0], self.cordenada[0][1]-self.sense[1]])
 
 
-s=snake([[10,11],[10,12]],"red",15,15)
 
-for i in range(3):
-    print(s.sense)
-    s.cambiar_sentido(input("ingrese una tupla"))
-    print(s.sense)
-    print(s.cordenada,"antes")
-    s.mover()
-    print(s.cordenada,"despues")
-
+        # pruebas
+        
+        # s=snake([[10,11],[10,12]],15,15)
+        # for i in range(5):
+        #     print(s.sense)
+        #     s.cambiar_sentido((0,1))
+        #     print(s.sense)
+        #     print(s.cordenada,"antes")
+        #     s.mover()
+        #     print(s.cordenada,"despues")
 
         # PARA AÑADIR
         # if event.type == pygame.KEYDOWN:
