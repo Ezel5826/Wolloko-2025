@@ -48,6 +48,13 @@
 # print(hola)
 # hola.append(3)
 # print(hola)
-# print(-1==False)
-lista=[[[2,2],0,"hola"],[[2,2],0,"hola"]]
-print(lista[0].count("hola"))
+# # print(-1==False)
+# lista=[[[2,2],0,"hola"],[[2,2],0,"hola"]]
+# print(lista[0].count("hola"))
+
+# lista=[[1,2],[1,2]]
+
+# for i in range(len(lista)):
+#     for j in range(len(lista[0])):
+#         if lista[i][j]==2:
+#             print("hola")
