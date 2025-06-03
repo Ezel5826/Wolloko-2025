@@ -47,13 +47,14 @@ class snake:
     def cambiar_sentido(self,nueva_cord):
         self.sense=nueva_cord
 
-    def eat_appl(self,apple):
-        if apple.cantidad == self.cordenada[len(self.cordenada)-1]:
-            apple.state = False
-            self.dencrement_size(apple.cantidad)
+    def eat_appl(self,apples,names):
+        if apples.cantidad == self.cordenada[len(self.cordenada)-1]:
+            apples.state = False
+            apples.check_state(apples,names)
+            self.dencrement_size(apples.cantidad)
 
-    def dencrement_size(self,apple):
-        increment=apple.increment_size
+    def dencrement_size(self,apples):
+        increment=apples.increment_size
         if increment>=1:
             for i in range(increment):
                 self.cordenada.insert(0,[self.cordenada[0][0]-self.sense[0], self.cordenada[0][1]-self.sense[1]])
