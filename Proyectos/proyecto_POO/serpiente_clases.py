@@ -48,10 +48,10 @@ class snake:
         self.sense=nueva_cord
 
     def eat_appl(self,apples,names):
-        if apples.cantidad == self.cordenada[len(self.cordenada)-1]:
-            apples.state = False
-            apples.check_state(apples,names)
-            self.dencrement_size(apples.cantidad)
+        for i in range(len(apples)):
+            if apples[i].coordenada == self.cordenada[len(self.cordenada)-1]:
+                apples[i] = apples[i].check_state(apples)
+                self.dencrement_size(apples.coordenadas)
 
     def dencrement_size(self,apples):
         increment=apples.increment_size
