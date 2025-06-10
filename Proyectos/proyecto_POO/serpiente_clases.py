@@ -1,8 +1,8 @@
 from copy import deepcopy as dp
 
 class snake:
-    def __init__(self,cordenadas,ancho,alto):
-        self.cordenada=cordenadas
+    def __init__(self,cordenadas:list,ancho,alto):
+        self.cordenadas=cordenadas
         self.sense=(0,0)
         self.ancho=ancho
         self.alto=alto 
@@ -23,20 +23,20 @@ class snake:
         
     def mover(self):
         if not self.sense == (0,0):
-            for i in range(len(self.cordenada)):
-                if i + 1 <= len(self.cordenada)-1:
-                    self.cordenada[i] = dp(self.cordenada[i+1])
+            for i in range(len(self.cordenadas)-1):
+                self.cordenadas[i] = dp(self.cordenadas[i+1])
 
             for i in range(2):
-                self.cordenada[len(self.cordenada)-1][i] += self.sense[i]
+                self.cordenadas[len(self.cordenadas)-1][i] += self.sense[i]
 
-            for x in range(len(self.cordenada)):
-                for y in range(len(self.cordenada[0])):
-                    if self.cordenada[x][y] > self.alto-1:
-                        self.cordenada[x][y] = 0
+            for x in range(len(self.cordenadas)):
+                for y in range(len(self.cordenadas[0])):
+                    if self.cordenadas[x][y] > self.alto-1:
+                        self.cordenadas[x][y] = 0
 
-                    if self.cordenada[x][y] < 0:
-                        self.cordenada[x][y] = self.alto-1
+                    if self.cordenadas[x][y] < 0:
+                        self.cordenadas[x][y] = self.alto-1
+        return
 
     def elegir_comandos(self,eleccion):
         self.comando_elegido = self.movimientos_L.get(eleccion)
@@ -47,18 +47,27 @@ class snake:
     def cambiar_sentido(self,nueva_cord):
         self.sense=nueva_cord
 
-    def eat_appl(self,apples,names):
-        for i in range(len(apples)):
-            if apples[i].coordenada == self.cordenada[len(self.cordenada)-1]:
-                apples[i] = apples[i].check_state(apples)
-                self.dencrement_size(apples.coordenadas)
+    def eat_appl(self,apples):
+        Bool,i=self.its_apple_on_snake(apples)
+        if Bool:
+            apples[i].reroll_coords(self,apples)
+            self.dencrement_size(apples[i])
 
-    def dencrement_size(self,apples):
-        increment=apples.increment_size
+    def its_apple_on_snake(self,apples):
+        i=0
+        for apple in apples:
+            if apple.coords in self.cordenadas:
+                return True,i
+            i+=1
+        return False,i
+
+    def dencrement_size(self,apple):
+        increment=apple.increment_size
         if increment>=1:
             for i in range(increment):
-                self.cordenada.insert(0,[self.cordenada[0][0]-self.sense[0], self.cordenada[0][1]-self.sense[1]])
-
+                self.cordenadas.insert(0,[self.cordenadas[0][0]-self.sense[0], self.cordenadas[0][1]-self.sense[1]])
+        else:
+            self.cordenadas.pop(0)
 
 
         # pruebas
