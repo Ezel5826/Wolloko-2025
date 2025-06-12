@@ -1,5 +1,5 @@
 from random import randint as rn
-import serpiente
+
 ancho=15
 alto=15
 def create_apple(snake,count_apple=5,feed_increment_size = 1,tipe="normal",state=True,apple=[]) -> list[(int,int),bool,int]:

@@ -1,44 +1,45 @@
 from copy import deepcopy as dp
-
+from random import randint as rn
 class snake:
-    def __init__(self,cordenadas:list,ancho,alto):
-        self.cordenadas=cordenadas
+    def __init__(self,ancho,alto):
+        self.coords=[[4,4],[4,5]]
         self.sense=(0,0)
         self.ancho=ancho
         self.alto=alto 
         self.movimientos_L={
             "p1": {
-                "K_a": (0, -1),
-                "K_d": (0, 1),
-                "K_s": (1, 0),
-                "K_w": (-1, 0)
+                97: (0, -1),
+                100: (0, 1),
+                115: (1, 0),
+                119: (-1, 0)
             },
             "p2": {
-                "K_LEFT": (0, -1),
-                "K_RIGHT": (0, 1),
-                "K_DOWN": (1, 0),
-                "K_UP": (-1, 0)
+                1073741904: (0, -1),
+                1073741903: (0, 1),
+                1073741905: (1, 0),
+                1073741906: (-1, 0)
             }
         }
         
     def mover(self):
         if not self.sense == (0,0):
-            for i in range(len(self.cordenadas)-1):
-                self.cordenadas[i] = dp(self.cordenadas[i+1])
+            for i in range(len(self.coords)-1):
+                self.coords[i] = dp(self.coords[i+1])
 
             for i in range(2):
-                self.cordenadas[len(self.cordenadas)-1][i] += self.sense[i]
+                self.coords[len(self.coords)-1][i] += self.sense[i]
 
-            for x in range(len(self.cordenadas)):
-                for y in range(len(self.cordenadas[0])):
-                    if self.cordenadas[x][y] > self.alto-1:
-                        self.cordenadas[x][y] = 0
+            for x in range(len(self.coords)):
+                for y in range(len(self.coords[0])):
+                    if self.coords[x][y] > self.alto-1:
+                        self.coords[x][y] = 0
 
-                    if self.cordenadas[x][y] < 0:
-                        self.cordenadas[x][y] = self.alto-1
+                    if self.coords[x][y] < 0:
+                        self.coords[x][y] = self.alto-1
         return
 
     def elegir_comandos(self,eleccion):
+        print(eleccion)
         self.comando_elegido = self.movimientos_L.get(eleccion)
     
     def elegir_tipo_serpent(self,tipo):
@@ -50,24 +51,25 @@ class snake:
     def eat_appl(self,apples):
         Bool,i=self.its_apple_on_snake(apples)
         if Bool:
+            print(i)
             apples[i].reroll_coords(self,apples)
             self.dencrement_size(apples[i])
 
     def its_apple_on_snake(self,apples):
         i=0
         for apple in apples:
-            if apple.coords in self.cordenadas:
+            if apple.coords in self.coords:
                 return True,i
             i+=1
         return False,i
 
     def dencrement_size(self,apple):
-        increment=apple.increment_size
+        increment=apple.feed_increment_size
         if increment>=1:
             for i in range(increment):
-                self.cordenadas.insert(0,[self.cordenadas[0][0]-self.sense[0], self.cordenadas[0][1]-self.sense[1]])
+                self.coords.insert(0,[self.coords[0][0]-self.sense[0], self.coords[0][1]-self.sense[1]])
         else:
-            self.cordenadas.pop(0)
+            self.coords.pop(0)
 
 
         # pruebas

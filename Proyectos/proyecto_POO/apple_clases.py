@@ -16,10 +16,13 @@ class apple:
                 break
     
     def apple_in_snake(self,snake,apple_):
-        return apple_ in snake
+  
+        return apple_ in snake.coords
     
     def apple_in_apples(self,apples,new_apple):
         for apple_ in apples:
              if new_apple==apple_.coords:
                 return True
         return False
+    
+    
