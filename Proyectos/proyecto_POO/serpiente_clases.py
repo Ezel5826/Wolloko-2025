@@ -1,5 +1,5 @@
 from copy import deepcopy as dp
-from random import randint as rn
+
 class snake:
     def __init__(self,ancho,alto):
         self.coords=[[4,4],[4,5]]
@@ -53,6 +53,7 @@ class snake:
         if Bool:
             print(i)
             apples[i].reroll_coords(self,apples)
+            apples[i].actual_type = "normal"
             self.dencrement_size(apples[i])
 
     def its_apple_on_snake(self,apples):

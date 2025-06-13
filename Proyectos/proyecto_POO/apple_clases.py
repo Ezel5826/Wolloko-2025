@@ -5,9 +5,13 @@ class apple:
         self.ancho=ancho
         self.alto=alto
         self.feed_increment_size = 1
-        self.type = "normal"
+        self.actual_type = "normal"
         self.state = True
-
+        self.available_tipes={
+            "gold":2,
+            "rotten":-1,
+            "thunderbolt":1
+            }
     def reroll_coords(self,snake,apples):
         while True:
             coords_nuevas=[rn(0, self.ancho-1), rn(0, self.alto-1)]
@@ -16,7 +20,6 @@ class apple:
                 break
     
     def apple_in_snake(self,snake,apple_):
-  
         return apple_ in snake.coords
     
     def apple_in_apples(self,apples,new_apple):
@@ -24,5 +27,14 @@ class apple:
              if new_apple==apple_.coords:
                 return True
         return False
-    
+    def change_apple_tipe(self):
+        tipes=list(self.available_tipes.keys())
+        print(tipes)
+        while True:
+            select_tipe=tipes[rn(0,len(tipes)-1)]
+            if select_tipe!=self.actual_type:
+                self.feed_increment_size=self.available_tipes.get(select_tipe)
+                self.actual_type=select_tipe
+                break
+
     

@@ -80,7 +80,6 @@ def mostrar_manzanas(apple_, dim,normal_apple,gold_apple,rotten_apple):
 def main():
     contador_habilidad=tm.perf_counter()
     Serpiente=serpiente.crear_serpiente()
-    serpent_2=serpiente.crear_serpiente()
     apple_=apple.create_apple(Serpiente)
     running=True
 
@@ -103,19 +102,6 @@ def main():
                 if event.key == pygame.K_w:
                     Serpiente[3] = (-1,0)#ABAJO
 
-
-                if event.key ==pygame.K_LEFT:
-                    serpent_2[3] = (0,-1)#IZQUIERDA
-                                    
-                if event.key ==pygame.K_RIGHT:
-                    serpent_2[3] = (0,1)#DERECHA
-                    
-                if event.key ==pygame.K_DOWN:
-                    serpent_2[3] = (1,0)#ARRIBA
-
-                if event.key ==pygame.K_UP:
-                    serpent_2[3] = (-1,0)#ABAJO
-           
                 # if event.key == pygame.K_4:
                 #     Serpiente=serpiente.increment_size(Serpiente)
 
@@ -135,13 +121,9 @@ def main():
         mostrar_grilla(Cambios_dimensionales_pantalla)
         mostrar_manzanas(apple_,Cambios_dimensionales_pantalla,normal_apple,gold_apple,rotten_apple)
         mostrar_serpent(Serpiente,Cambios_dimensionales_pantalla,serpent_body,serpent_head,Serpiente[3])
-        mostrar_serpent(serpent_2,Cambios_dimensionales_pantalla,serpent_body,serpent_head,Serpiente[3])
         Serpiente=serpiente.move_serpent(Serpiente)
-        serpent_2=serpiente.move_serpent(serpent_2)
         Serpiente,apple_=serpiente.eat_appl(Serpiente,apple_)
-        serpent_2,apple_=serpiente.eat_appl(serpent_2,apple_)
         apple_ =apple.check_state(apple_,Serpiente)
-        apple_ =apple.check_state(apple_,serpent_2)
         pygame.display.flip()
 
         clock.tick(10)  
