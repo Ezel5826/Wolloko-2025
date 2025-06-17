@@ -1,19 +1,21 @@
 from copy import deepcopy as dp
 
 class snake:
-    def __init__(self,ancho,alto):
+    def __init__(self,ancho,alto,color):
         self.coords=[[4,4],[4,5]]
         self.sense=(0,0)
         self.ancho=ancho
         self.alto=alto 
+        self.eligio_comando=False
+        self.color=color
         self.movimientos_L={
-            "p1": {
+            49: {
                 97: (0, -1),
                 100: (0, 1),
                 115: (1, 0),
                 119: (-1, 0)
             },
-            "p2": {
+            50: {
                 1073741904: (0, -1),
                 1073741903: (0, 1),
                 1073741905: (1, 0),
@@ -21,7 +23,7 @@ class snake:
             }
         }
         
-    def mover(self):
+    def mover(self,apple):
         if not self.sense == (0,0):
             for i in range(len(self.coords)-1):
                 self.coords[i] = dp(self.coords[i+1])
@@ -36,11 +38,13 @@ class snake:
 
                     if self.coords[x][y] < 0:
                         self.coords[x][y] = self.alto-1
+            self.eat_appl(apple)
         return
 
     def elegir_comandos(self,eleccion):
         print(eleccion)
         self.comando_elegido = self.movimientos_L.get(eleccion)
+        self.eligio_comando=True
     
     def elegir_tipo_serpent(self,tipo):
         self.tipe_serpent = tipo
@@ -70,7 +74,8 @@ class snake:
             for i in range(increment):
                 self.coords.insert(0,[self.coords[0][0]-self.sense[0], self.coords[0][1]-self.sense[1]])
         else:
-            self.coords.pop(0)
+            if len(self.coords) > 2:
+                self.coords.pop(0)
 
 
         # pruebas

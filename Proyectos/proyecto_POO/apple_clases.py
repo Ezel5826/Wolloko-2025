@@ -8,10 +8,13 @@ class apple:
         self.actual_type = "normal"
         self.state = True
         self.available_tipes={
-            "gold":2,
-            "rotten":-1,
-            "thunderbolt":1
+            "normal":[1,"Proyectos/proyecto_POO/images/manza_normal.png"],
+            "gold":[2,"Proyectos/proyecto_POO/images/manzana_de_oro.png"],
+            "rotten":[-1,"Proyectos/proyecto_POO/images/manzana_podrida.png"],
+            "thunderbolt":[1,"Proyectos/proyecto_POO/images/imagen azul (1).png"]
             }
+
+
     def reroll_coords(self,snake,apples):
         while True:
             coords_nuevas=[rn(0, self.ancho-1), rn(0, self.alto-1)]
@@ -33,7 +36,7 @@ class apple:
         while True:
             select_tipe=tipes[rn(0,len(tipes)-1)]
             if select_tipe!=self.actual_type:
-                self.feed_increment_size=self.available_tipes.get(select_tipe)
+                self.feed_increment_size=self.available_tipes.get(select_tipe)[0]
                 self.actual_type=select_tipe
                 break
 
