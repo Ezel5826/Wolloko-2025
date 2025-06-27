@@ -1,12 +1,12 @@
 object colectivo {
-    // const max_pasajeros = 100 
+    const max_pasajeros = 100 
     const max_nafta = 200
+    var sense = 1 
+    var nafta_actual = null
     var property gente_sobrante = false 
     var property pasajeros_subidos = null 
-    var property nafta_actual = null
     var property cant_gente_sobrante = null
     var property cant_gente_a_subir = null
-    // var sense = 1 
 
     method avanzar() {   
 
@@ -36,11 +36,8 @@ class Ruta {
     var property parada_sig = parada_actual + 1
     const property paradas = []
     var property cant_total_gente = 0 
-    method Add_paradas(cant_paradas) {
-        // voy a mandarle un x.times({z => new Paradas(x cantidad de pasajeros)}) en formato lista
-        // tengoq ue ahcer un .add(xtimes(creo yo))|
-        // cant_paradas.times({z => var x = new Paradas()})
-        // paradas + paradas_
+    method add_paradas(cant_paradas) {
+        cant_paradas.times({x => paradas.add(new Paradas(cant_minima=3, cant_maxima=10))})
     }
     method cant_paradas() = paradas.length()
     method cant_gente_in_parada() = paradas.get(parada_actual).gente()  
@@ -48,9 +45,13 @@ class Ruta {
 }
 
 class Paradas {
-    var property cant_gente 
+    var property cant_minima 
+    var property cant_maxima
+    var property cant_gente = cant_minima.randomUpTo(cant_maxima)
     method restar_pasajeros(pasajeros_a_restar) {
       cant_gente-pasajeros_a_restar
     }
 
 }
+
+const ruta = new Ruta()
