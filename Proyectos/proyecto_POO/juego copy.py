@@ -88,8 +88,6 @@ def main():
                 if not snakes[0].eligio_comando:
                     if event.key in snakes[0].movimientos_L:
                         snakes[0].elegir_comandos(event.key)
-                        snakes[1].movimientos_L.pop(event.key)
-                        snakes[1].elegir_comandos(snakes[1].movimientos_L.)
                 for snake in snakes:
                     if snake.eligio_comando:
                             if event.key in snake.comando_elegido and snake.sense!=snake.comando_elegido.get(event.key):
