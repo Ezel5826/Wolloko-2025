@@ -6,10 +6,23 @@ import pygame
 pygame.init()
 screen = pygame.display.set_mode((600,600))
 clock = pygame.time.Clock()
-alto,ancho=15,15
-d_Cubos=35
+alto,ancho=10,10
+d_Cubos=50
 time=0
-
+movimientos_L={
+            49: {
+                97: (0, -1),
+                100: (0, 1),
+                115: (1, 0),
+                119: (-1, 0)
+            },
+            50: {
+                1073741904: (0, -1),
+                1073741903: (0, 1),
+                1073741905: (1, 0),
+                1073741906: (-1, 0)
+            }
+        }
 
 def mostrar_grilla(dimensiones):
     alto_g = alto*d_Cubos
@@ -72,6 +85,8 @@ def main():
     running = True
     apples=[]
     snakes=[]
+    startgame=False
+    quantity_chose=0
     # for _ in range(2):
     snakes.append(Snake.snake(alto,ancho,"red"))
     snakes.append(Snake.snake(alto,ancho,"green"))
@@ -85,28 +100,33 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.KEYDOWN:
-                if not snakes[0].eligio_comando:
-                    if event.key in snakes[0].movimientos_L:
-                        snakes[0].elegir_comandos(event.key)
                 for snake in snakes:
-                    if snake.eligio_comando:
-                            if event.key in snake.comando_elegido and snake.sense!=snake.comando_elegido.get(event.key):
-                                snake.cambiar_sentido(snake.comando_elegido.get(event.key)) 
-        print(counter_result)
-        if counter_result > 3:     
-            apples[rn(0,len(apples))-1].change_apple_tipe()
-            contador_habilidad=tm.perf_counter()
-        screen.fill("black")
-        Cambios_dimensionales_pantalla = pygame.display.get_surface().get_size()
-        mostrar_grilla(Cambios_dimensionales_pantalla)
-        mostrar_manzanas(apples,Cambios_dimensionales_pantalla)
-        mostrar_serpent(snakes,Cambios_dimensionales_pantalla)
-        for snake in snakes:  
-                snake.mover(apples)
+                    if not snake.eligio_comando:
+                        if event.key in movimientos_L and len(snakes)==2:
+                            snake.elegir_comandos(movimientos_L.get(event.key))
+                            movimientos_L.pop(event.key)
+                            quantity_chose+=1
+                        
+                    else:
+                        if event.key in snake.comando_elegido:
+                            snake.cambiar_sentido(snake.comando_elegido.get(event.key)) 
 
-        pygame.display.flip()
+        startgame=True if quantity_chose==len(snakes) else startgame
+        if startgame:
+            if counter_result > 3:     
+                apples[rn(0,len(apples))-1].change_apple_tipe()
+                contador_habilidad=tm.perf_counter()
+            screen.fill("black")
+            Cambios_dimensionales_pantalla = pygame.display.get_surface().get_size()
+            mostrar_grilla(Cambios_dimensionales_pantalla)
+            mostrar_manzanas(apples,Cambios_dimensionales_pantalla)
+            mostrar_serpent(snakes,Cambios_dimensionales_pantalla)
+            for snake in snakes:  
+                    snake.mover(apples)
 
-        clock.tick(10) 
+            pygame.display.flip()
+
+            clock.tick(10) 
 
     pygame.quit()
 main()

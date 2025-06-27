@@ -8,21 +8,6 @@ class snake:
         self.alto=alto 
         self.eligio_comando=False
         self.color=color
-        self.movimientos_L={
-            49: {
-                97: (0, -1),
-                100: (0, 1),
-                115: (1, 0),
-                119: (-1, 0)
-            },
-            50: {
-                1073741904: (0, -1),
-                1073741903: (0, 1),
-                1073741905: (1, 0),
-                1073741906: (-1, 0)
-            }
-        }
-        
     def mover(self,apple):
         if not self.sense == (0,0):
             for i in range(len(self.coords)-1):
@@ -42,8 +27,7 @@ class snake:
         return
 
     def elegir_comandos(self,eleccion):
-        print(eleccion)
-        self.comando_elegido = self.movimientos_L.get(eleccion)
+        self.comando_elegido = eleccion
         self.eligio_comando=True
     
     def elegir_tipo_serpent(self,tipo):
@@ -55,7 +39,6 @@ class snake:
     def eat_appl(self,apples):
         Bool,i=self.its_apple_on_snake(apples)
         if Bool:
-            print(i)
             apples[i].reroll_coords(self,apples)
             apples[i].actual_type = "normal"
             self.dencrement_size(apples[i])

@@ -10,8 +10,7 @@ class apple:
         self.available_tipes={
             "normal":[1,"Proyectos/proyecto_POO/images/manza_normal.png"],
             "gold":[2,"Proyectos/proyecto_POO/images/manzana_de_oro.png"],
-            "rotten":[-1,"Proyectos/proyecto_POO/images/manzana_podrida.png"],
-            "thunderbolt":[1,"Proyectos/proyecto_POO/images/imagen azul (1).png"]
+            "rotten":[-1,"Proyectos/proyecto_POO/images/manzana_podrida.png"]
             }
 
 
