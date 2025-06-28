@@ -58,3 +58,10 @@
 #     for j in range(len(lista[0])):
 #         if lista[i][j]==2:
 #             print("hola")
+# edad_ingresa=int(input("ingrese su edad "))
+# dni = int(input("ingrese su dni "))
+
+# if  not(edad_ingresa >= 18 or dni <= 40000000):
+#     print("sos mayor de edad")
+# else:
+#     print("usted es menor de edad")
