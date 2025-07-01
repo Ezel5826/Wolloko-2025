@@ -1,15 +1,12 @@
-class Segmentos {
-    const property longitud 
-}
 
-object poligono {
-    const property segmento1 = new Segmentos(longitud=4)
-    const property segmento2 = new Segmentos(longitud=4)
-    const property segmento3 = new Segmentos(longitud=4)
+class Poligono {
+    const property segmento1 = 3
+    const property segmento2 = 5
+    const property segmento3 = 6
 
-    method es_equilatero() = segmento1.longitud()==segmento2.longitud() and segmento2.longitud()==segmento3.longitud() 
+    method es_equilatero() = segmento1==segmento2 and segmento2==segmento3 
     
-    method es_isosceles() = segmento1.longitud()==segmento2.longitud() or segmento1.longitud()==segmento3.longitud() and segmento1.longitud()!=segmento2.longitud() or segmento1.longitud()!=segmento3.longitud() 
+    method es_isosceles() = segmento1==segmento2 or segmento1==segmento3 and segmento1!=segmento2 or segmento1!=segmento3 
 
-    method es_escaleno() = segmento1.longitud()!=segmento2.longitud() and segmento2.longitud()!=segmento3.longitud() 
+    method es_escaleno() = segmento1!=segmento2 and segmento2!=segmento3 
 }
