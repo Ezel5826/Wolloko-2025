@@ -28,13 +28,15 @@ object colectivo {
 
     method sobra_gente(ruta) =  (ruta.cant_gente_in_parada() + pasajeros_subidos) > max_pasajeros
 
-    method nafta_insuficiente() = self.calcular_nafta_ecuacion() >= max_nafta
+    method nafta_insuficiente() = self.gasto_nafta_por_ruta() >= max_nafta
 
-    method calcular_nafta_ecuacion() = 1 + 0.1 * pasajeros_subidos
+    method gasto_nafta(pasajeros) = 1 + 0.1 * pasajeros
 
-    method gente_carril_total() = ruta.gente_total()
+    method gasto_nafta_paradas_restantes() = self.gasto_nafta(pasajeros_subidos) * ruta.paradas_restantes()
 
-    method cant_vueltas_a_dar() = (ruta) 
+    method gasto_nafta_por_ruta() = self.gasto_nafta(ruta.gente_total()) * ruta.cant_paradas()
+
+    method cant_vueltas_a_dar() = (ruta.gente_total() / max_pasajeros).round()
 
 }
 
@@ -46,12 +48,12 @@ class Ruta {
     var property cant_total_sobrante = 0 
     var x = 0
 
-    method add_paradas(cant_paradas) {cant_paradas.times({x => paradas.add(new Paradas(cant_minima=3, cant_maxima=10,gente_sobrante=0))})} //anda
+    method add(cant_paradas) {cant_paradas.times({x => paradas.add(new Paradas(cant_minima=3, cant_maxima=10,gente_sobrante=0))})} //anda
     
     method gente_total() {paradas.forEach({parada => x += parada.cant_gente()}) if (cant_total_gente != x) {cant_total_gente = x} x = 0 return cant_total_gente} //anda 
     
     method cant_paradas() = paradas.size() //anda
-    
+
     method cant_gente_in_parada() = paradas.get(parada_actual).cant_gente() //anda
 
     method paradas_restantes() = self.cant_paradas() - parada_actual //anda
