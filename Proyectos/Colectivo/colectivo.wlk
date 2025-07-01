@@ -34,6 +34,8 @@ object colectivo {
 
     method gente_carril_total() = ruta.gente_total()
 
+    method cant_vueltas_a_dar() = (ruta) 
+
 }
 
 class Ruta {
@@ -44,15 +46,15 @@ class Ruta {
     var property cant_total_sobrante = 0 
     var x = 0
 
-    method add_paradas(cant_paradas) {cant_paradas.times({x => paradas.add(new Paradas(cant_minima=3, cant_maxima=10,gente_sobrante=0))})}
+    method add_paradas(cant_paradas) {cant_paradas.times({x => paradas.add(new Paradas(cant_minima=3, cant_maxima=10,gente_sobrante=0))})} //anda
     
-    method gente_total() {paradas.forEach({parada => x += parada.cant_gente()}) if (cant_total_gente != x) {cant_total_gente = x} x = 0} 
+    method gente_total() {paradas.forEach({parada => x += parada.cant_gente()}) if (cant_total_gente != x) {cant_total_gente = x} x = 0 return cant_total_gente} //anda 
     
-    method cant_paradas() = paradas.length()
+    method cant_paradas() = paradas.size() //anda
     
-    method cant_gente_in_parada() = paradas.get(parada_actual).cant_gente()  
+    method cant_gente_in_parada() = paradas.get(parada_actual).cant_gente() //anda
 
-    method paradas_restantes() = self.cant_paradas() - parada_actual
+    method paradas_restantes() = self.cant_paradas() - parada_actual //anda
 
 }
 
