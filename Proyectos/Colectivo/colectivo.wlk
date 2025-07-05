@@ -11,7 +11,6 @@ object colectivo {
     method avanzar() {   
 
     }
-    method recargar_nafta() {nafta_actual = max_nafta}
     
 
     method bajar_pasajeros() {
@@ -23,10 +22,11 @@ object colectivo {
     }
 
     method volver_urgencia() {
-      
+    
     }
+    method recargar_nafta() {nafta_actual = max_nafta}
 
-    method sobra_gente(ruta) =  (ruta.cant_gente_in_parada() + pasajeros_subidos) > max_pasajeros
+    method sobra_gente() =  (ruta.cant_gente_in_parada() + pasajeros_subidos) > max_pasajeros
 
     method nafta_insuficiente() = self.gasto_nafta_por_ruta() >= max_nafta
 
@@ -38,6 +38,17 @@ object colectivo {
 
     method cant_vueltas_a_dar() = (ruta.gente_total() / max_pasajeros).round()
 
+    // method sobra_gente(ruta) =  (ruta.cant_gente_in_parada() + pasajeros_subidos) > max_pasajeros
+
+    // method nafta_insuficiente(gente_total) = self.gasto_nafta_por_ruta(gente_total) >= max_nafta
+
+    // method gasto_nafta(pasajeros) = 1 + 0.1 * pasajeros
+
+    // method gasto_nafta_paradas_restantes(paradas_restantes) = self.gasto_nafta(pasajeros_subidos) * paradas_restantes
+
+    // method gasto_nafta_por_ruta(gente_total) = self.gasto_nafta(gente_total) * ruta.cant_paradas()
+
+    // method cant_vueltas_a_dar(gente_total) = ( gente_total / max_pasajeros).round()
 }
 
 class Ruta {
