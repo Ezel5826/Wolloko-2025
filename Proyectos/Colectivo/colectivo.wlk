@@ -6,7 +6,7 @@ object colectivo {
     var nafta_ruta = 0
     var nafta_paradas_r = 0
     var iterador = 0
-    var nafta_actual = null
+    var nafta_actual = 100
     var property gente_sobrante = false 
     var property pasajeros_subidos = 0 
     var property cant_gente_sobrante = null
@@ -35,12 +35,12 @@ object colectivo {
     method recargar_nafta() {nafta_actual = max_nafta }
 
     method subir_gente(cantidad_pasajeros) {
-        if (self.gasto_nafta_paradas_restantes(pasajeros_subidos+cantidad_pasajeros) <= nafta_actual && (pasajeros_subidos + cantidad_pasajeros <= max_pasajeros)){
-            pasajeros_subidos = pasajeros_subidos + cantidad_pasajeros
+        if ((self.gasto_nafta_paradas_restantes(pasajeros_subidos+cantidad_pasajeros) <= nafta_actual ) && (pasajeros_subidos + cantidad_pasajeros <= max_pasajeros)){
+            pasajeros_subidos += cantidad_pasajeros
             ruta.paradas().get(ruta.parada_actual()).restar_pasajeros(cantidad_pasajeros)
-            return 
+             
         }else{
-            return self.subir_gente(cantidad_pasajeros-1)
+            self.subir_gente(cantidad_pasajeros-1)
         }
     }
 
@@ -87,7 +87,7 @@ class Ruta {
     
     method cant_paradas() = paradas.size() //anda
     
-    method gente_por_paradas(){paradas.forEach({parada => gente_paradas.add(parada.cant_gente())}) return gente_paradas}//anda
+    method gente_por_paradas(){gente_paradas=[] paradas.forEach({parada => gente_paradas.add(parada.cant_gente())}) return gente_paradas}//anda
 
     method cant_gente_in_parada() = paradas.get(parada_actual).cant_gente() //anda
 
