@@ -38,7 +38,6 @@ object colectivo {
         if ((self.gasto_nafta_paradas_restantes(pasajeros_subidos+cantidad_pasajeros) <= nafta_actual ) && (pasajeros_subidos + cantidad_pasajeros <= max_pasajeros)){
             pasajeros_subidos += cantidad_pasajeros
             ruta.paradas().get(ruta.parada_actual()).restar_pasajeros(cantidad_pasajeros)
-             
         }else{
             self.subir_gente(cantidad_pasajeros-1)
         }
