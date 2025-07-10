@@ -1,48 +1,44 @@
 import wollok.vm.*
 object colectivo {
     const max_pasajeros = 100 
+    var property pasajeros_subidos = 0 
     const max_nafta = 200
+    var nafta_actual = 100
     var sense = 1 
     var nafta_ruta = 0
     var nafta_paradas_r = 0
     var iterador = 0
-    var nafta_actual = 100
-    var property gente_sobrante = false 
-    var property pasajeros_subidos = 0 
-    var property cant_gente_sobrante = null
-    var property cant_gente_a_subir = null
+    var property cant_gente_sobrante = 0
 
     method avanzar() {   
-
+        self.subir_gente(ruta.paradas().get(ruta.parada_actual()).cant_gente())
+        self.bajar_pasajeros()   
+        ruta.parada_actual(ruta.parada_actual() + sense)
     }
-    
 
     method bajar_pasajeros() {
 
-      if (ruta.parada_actual()==ruta.paradas().size()-1){
+      if (ruta.parada_actual()==ruta.paradas().size()-1 || ruta.parada_actual()==0 ){
         ruta.paradas().get(ruta.parada_actual()).sumar_pasajeros(pasajeros_subidos)
         pasajeros_subidos = 0
-      }else if(cant_gente_a_subir){nafta_actual=0}
+        sense = sense * -1 
+        self.recargar_nafta()
+      }
     }  
 
-    method volver() {
-      
-    }
-
-    method volver_urgencia() {
-    
-    }
-    method recargar_nafta() {nafta_actual = max_nafta }
-
-    method subir_gente(cantidad_pasajeros) {
+    method subir_gente(cantidad_pasajeros) {//anda
         if ((self.gasto_nafta_paradas_restantes(pasajeros_subidos+cantidad_pasajeros) <= nafta_actual ) && (pasajeros_subidos + cantidad_pasajeros <= max_pasajeros)){
+
             pasajeros_subidos += cantidad_pasajeros
             ruta.paradas().get(ruta.parada_actual()).restar_pasajeros(cantidad_pasajeros)
+            cant_gente_sobrante += ruta.paradas().get(ruta.parada_actual()).cant_gente()
              
         }else{
             self.subir_gente(cantidad_pasajeros-1)
         }
     }
+
+    method recargar_nafta() {if (nafta_actual + max_nafta > max_nafta) {nafta_actual += max_nafta} else{ nafta_actual=max_nafta} }
 
     method gasto_nafta_por_ruta() {nafta_ruta = 0 ruta.paradas().forEach({x => nafta_ruta = self.gasto_nafta(pasajeros_subidos + x.cant_gente()) + nafta_ruta})  return nafta_ruta} //anda
 
@@ -50,11 +46,14 @@ object colectivo {
     
     method sobra_gente() = (ruta.cant_gente_in_parada() + pasajeros_subidos) > max_pasajeros //anda
 
-    method nafta_insuficiente() = self.gasto_nafta_por_ruta() >= max_nafta //anda
-
     method gasto_nafta(pasajeros) = 1 + 0.1 * pasajeros //anda
 
     method cant_vueltas_a_dar() = (ruta.gente_total() / max_pasajeros).round() //anda
+
+    method nafta_insuficiente() = self.gasto_nafta_por_ruta() >= max_nafta //anda
+
+
+
 
     // method sobra_gente(ruta) =  (ruta.cant_gente_in_parada() + pasajeros_subidos) > max_pasajeros
 
