@@ -1,0 +1,80 @@
+import colectivo.*
+
+
+describe 
+"comportamiento de la nafta" {
+    method initialize() {
+    colectivo.nafta_actual(10)
+  }  
+    test "gasto nafta normal" {
+        assert.equals(5,colectivo.gasto_nafta(40))
+  }
+    test "gasto nafta muchas personas" {
+        assert.equals(3001,colectivo.gasto_nafta(30000))    
+  }
+    test "gasto nafta con personas imposibles" {
+        assert.equals(1,colectivo.gasto_nafta(0.5))
+  }
+    test "gasto nafta con personas negativas" {
+        assert.equals(1,colectivo.gasto_nafta(-1))
+  }
+    test "gasto de nafta en una ruta normalita" {
+        assert.equals(5.9, colectivo.gasto_nafta_por_ruta([0,1,3,10,0]))
+  }
+    test "gasto de nafta en una ruta mas chica" {
+        assert.equals(2.1, colectivo.gasto_nafta_por_ruta([0,1,0]))
+  }
+    test "gasto de nafta en una ruta de longitud 2" {
+        assert.equals(1, colectivo.gasto_nafta_por_ruta([0,0]))
+  }
+    test "gasto de nafta en una ruta de longitud 1" {
+        assert.equals(0, colectivo.gasto_nafta_por_ruta([0]))
+  }
+    test "gasto de nafta en una ruta vacia" {
+        assert.equals(0, colectivo.gasto_nafta_por_ruta([]))
+  }
+    test "gasto de nafta en una ruta con personas negativas" {
+        assert.equals(6.1, colectivo.gasto_nafta_por_ruta([0,-1,9,3,0]))
+  }
+    test "gasto de nafta en una ruta enorme" {
+        assert.equals(45.1, colectivo.gasto_nafta_por_ruta([0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0]))
+  }
+    test "recargar nafta sin excedente" {
+    assert.equals(40, colectivo.recargar_nafta(30))
+  }
+    test "recargar nafta en exceso" {
+        assert.equals(50, colectivo.recargar_nafta(100))
+  }
+    test "recargar nafta con coma" {
+        assert.equals(11.1, colectivo.recargar_nafta(1.1))
+  }
+    test "recargar nafta negativa" {
+        assert.equals(10, colectivo.recargar_nafta(-1))
+  }
+    test "recargar nada de nafta" {
+        assert.equals(10, colectivo.recargar_nafta(0))
+  }
+    test "gasto por paradas restantes normalito"  {
+        assert.equals(7.6, colectivo.gasto_nafta_paradas_restantes(10,[0,1,3,10,0],1))
+  }
+    test "gasto por paradas restantes nulas" {
+        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(0,[0,1,3,4,0],5))
+  }
+    test "gasto por paradas restantes negativas" {
+        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(0,[0,1,3,4,0],-1))
+  }
+    test "gasto por paradas restantes = 0" {
+        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(0,[0,1,3,4,0],4))
+  }
+    test "gasto por paradas restantes con personas nulas" {
+        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(-10,[0,1,3,4,0],0))
+  }
+    test "gasto por paradas restantes con personas nulas en las paradas" {
+        assert.equals(4.7, colectivo.gasto_nafta_paradas_restantes(0,[0,1,-3,4,0],0))
+  }
+}
+describe "Pruebas del colectivo" {
+  test "pruebas con subir gente" {
+    
+  }
+}
