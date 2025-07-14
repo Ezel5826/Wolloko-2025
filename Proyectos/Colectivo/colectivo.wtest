@@ -75,6 +75,13 @@ describe
 }
 describe "Pruebas del colectivo" {
   test "pruebas con subir gente" {
+    colectivo.subir_gente(50)
+    assert.equals(50,colectivo.pasajeros_subidos())
     
   }
+  test "pruebas con subir gente " {
+    colectivo.subir_gente(1000)
+    assert.equals(100,colectivo.pasajeros_subidos())
+  }
 }
+
