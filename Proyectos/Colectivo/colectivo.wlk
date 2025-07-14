@@ -26,16 +26,16 @@ object colectivo {
       if (ruta.parada_actual() == ruta.paradas().size()-1 || (ruta.parada_actual() == 0 && vueltas != 0) ){
         ruta.paradas().get(ruta.parada_actual()).sumar_pasajeros(pasajeros_subidos)
         pasajeros_subidos = 0
-        if (cant_gente_sobrante != 0){sense *=-1  vueltas += 1}
+        if (cant_gente_sobrante != 0){sense *= -1  vueltas += 1}
         self.recargar_nafta(ruta.recargarNafta())
       }
     }  
 
     method subir_gente(cantidad_pasajeros) {//anda
-        if (((self.gasto_nafta_paradas_restantes(pasajeros_subidos+cantidad_pasajeros,ruta.paradas()) <= nafta_actual ) && (pasajeros_subidos + cantidad_pasajeros <= max_pasajeros) && (ruta.parada_actual() != 0 || ruta.parada_actual()!=ruta.paradas().size()-1))){
+        if (((self.gasto_nafta_paradas_restantes(pasajeros_subidos+cantidad_pasajeros,ruta.paradas(),ruta.parada_actua()) <= nafta_actual ) && (pasajeros_subidos + cantidad_pasajeros <= max_pasajeros) && (ruta.parada_actual() != 0 || ruta.parada_actual()!=ruta.paradas().size()-1))){
             pasajeros_subidos += cantidad_pasajeros
             ruta.paradas().get(ruta.parada_actual()).restar_pasajeros(cantidad_pasajeros)
-            cant_gente_sobrante += self.obtenerGente()
+            cant_gente_sobrante += self.obtenerGente() 
         } else{
             self.subir_gente(cantidad_pasajeros-1)
         }
