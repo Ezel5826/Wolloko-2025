@@ -4,8 +4,9 @@ import colectivo.*
 describe 
 "comportamiento de la nafta" {
     method initialize() {
+    // const colectivo = new Colectivo()
+    const ruta = new Ruta(paradasPrueba=[])
     colectivo.nafta_actual(10)
-    const ruta = new Ruta()
   }  
     test "gasto nafta normal" {
         assert.equals(5,colectivo.gasto_nafta(40))
@@ -19,68 +20,96 @@ describe
     test "gasto nafta con personas negativas" {
         assert.equals(1,colectivo.gasto_nafta(-1))
   }
-    test "gasto de nafta en una ruta normalita" {
-        ruta.add(5)
-        assert.equals(5.9, colectivo.gasto_nafta_por_ruta(ruta.paradas()))
+   test "gasto de nafta en una ruta normalita" {
+    ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=1),new Paradas(cant_gente=3),new Paradas(cant_gente=10),new Paradas(cant_gente=0)])
+        assert.equals(5.9, colectivo.gasto_nafta_por_ruta(ruta.paradasPrueba()))
   }
     test "gasto de nafta en una ruta mas chica" {
-        assert.equals(2.1, colectivo.gasto_nafta_por_ruta([0,1,0]))
+      ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=1),new Paradas(cant_gente=0)])
+        assert.equals(2.1, colectivo.gasto_nafta_por_ruta(ruta.paradasPrueba()))
   }
     test "gasto de nafta en una ruta de longitud 2" {
-      ruta.add(2)
-        assert.equals(1, colectivo.gasto_nafta_por_ruta(ruta.paradas()))
+      ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=0)])
+        assert.equals(1, colectivo.gasto_nafta_por_ruta(ruta.paradasPrueba()))
   }
     test "gasto de nafta en una ruta de longitud 1" {
-      ruta.add(1)
-        assert.equals(0, colectivo.gasto_nafta_por_ruta(ruta.paradas()))
+      ruta.paradasPrueba([new Paradas(cant_gente=0)])
+        assert.equals(0, colectivo.gasto_nafta_por_ruta(ruta.paradasPrueba()))
   }
     test "gasto de nafta en una ruta vacia" {
-      ruta.add(0)
-        assert.equals(0, colectivo.gasto_nafta_por_ruta(ruta.paradas()))
+        assert.equals(0, colectivo.gasto_nafta_por_ruta(ruta.paradasPrueba()))
   }
     test "gasto de nafta en una ruta con personas negativas" {
-        assert.equals(6.1, colectivo.gasto_nafta_por_ruta([0,-1,9,3,0]))
+        ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=-1),new Paradas(cant_gente=9),new Paradas(cant_gente=3),new Paradas(cant_gente=0)])
+        assert.equals(6.1, colectivo.gasto_nafta_por_ruta(ruta.paradasPrueba()))
   }
     test "gasto de nafta en una ruta enorme" {
-        assert.equals(45.1, colectivo.gasto_nafta_por_ruta([0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0]))
+        const lista = []
+        23.times({x => lista.add(new Paradas(cant_gente=1))})
+        ruta.set_terminals(lista)
+        ruta.paradasPrueba(lista)
+        assert.equals(45.1, colectivo.gasto_nafta_por_ruta(ruta.paradasPrueba()))
   }
     test "recargar nafta sin excedente" {
-    ruta.recargarNafta(10)
-    assert.equals(20, colectivo.recargar_nafta(ruta.recargarNafta()))
+        const add = 10
+        ruta.recargarNafta(add)
+        //consultar sobre como es eso que si es clase se actualiza el valor y que si es objeto el valor no se actualiza
+        assert.equals(colectivo.nafta_actual() + add, colectivo.recargar_nafta(ruta.recargarNafta()))
   }
     test "recargar nafta en exceso" {
         ruta.recargarNafta(colectivo.max_nafta()+10)
         assert.equals(colectivo.max_nafta(), colectivo.recargar_nafta(ruta.recargarNafta()))
   }
     test "recargar nafta con coma" {
-        ruta.recargarNafta(1.1)
-        assert.equals(11.1, colectivo.recargar_nafta(ruta.recargarNafta()))
+        const add = 1.1
+        ruta.recargarNafta(add)
+        assert.equals(colectivo.nafta_actual() + add, colectivo.recargar_nafta(ruta.recargarNafta()))
   }
     test "recargar nafta negativa" {
-        ruta.recargarNafta(-1)
-        assert.equals(10, colectivo.recargar_nafta(ruta.recargarNafta()))
+        const add=-1
+        ruta.recargarNafta(add)
+        assert.equals(colectivo.nafta_actual() , colectivo.recargar_nafta(ruta.recargarNafta()))
   }
     test "recargar nada de nafta" {
-      ruta.recargarNafta(0)
-        assert.equals(10, colectivo.recargar_nafta(ruta.recargarNafta()))
+        const add = 0
+        ruta.recargarNafta(add)
+        assert.equals(colectivo.nafta_actual(), colectivo.recargar_nafta(ruta.recargarNafta()))
   }
     test "gasto por paradas restantes normalito"  {
-        assert.equals(7.6, colectivo.gasto_nafta_paradas_restantes(10,[0,1,3,10,0],1))
+        ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=1),new Paradas(cant_gente=3),new Paradas(cant_gente=10),new Paradas(cant_gente=0)])
+        colectivo.pasajeros_subidos(10)
+        ruta.parada_actual(1)
+        assert.equals(7.6, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos(),ruta.paradasPrueba(),ruta.parada_actual()))
   }
     test "gasto por paradas restantes nulas" {
-        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(0,[0,1,3,4,0],5))
+        ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=-1),new Paradas(cant_gente=3),new Paradas(cant_gente=10),new Paradas(cant_gente=0)])
+        colectivo.pasajeros_subidos(14)
+        ruta.parada_actual(5)
+        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos(),ruta.paradasPrueba(),ruta.parada_actual()))
   }
     test "gasto por paradas restantes negativas" {
-        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(0,[0,1,3,4,0],-1))
+        ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=-1),new Paradas(cant_gente=3),new Paradas(cant_gente=10),new Paradas(cant_gente=0)])
+        colectivo.pasajeros_subidos(14)
+        ruta.parada_actual(-1)
+        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos(),ruta.paradasPrueba(),ruta.parada_actual()))
   }
     test "gasto por paradas restantes = 0" {
-        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(0,[0,1,3,4,0],4))
+        ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=-1),new Paradas(cant_gente=3),new Paradas(cant_gente=10),new Paradas(cant_gente=0)])
+        colectivo.pasajeros_subidos(23)
+        ruta.parada_actual(ruta.paradasPrueba().size()-1)
+        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos(),ruta.paradasPrueba(),ruta.parada_actual()))
   }
     test "gasto por paradas restantes con personas nulas" {
-        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(-10,[0,1,3,4,0],0))
+      ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=-1),new Paradas(cant_gente=3),new Paradas(cant_gente=10),new Paradas(cant_gente=0)])
+        colectivo.pasajeros_subidos(-10)
+        ruta.parada_actual(0)
+        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos(),ruta.paradasPrueba(),ruta.parada_actual()))
   }
     test "gasto por paradas restantes con personas nulas en las paradas" {
-        assert.equals(4.7, colectivo.gasto_nafta_paradas_restantes(0,[0,1,-3,4,0],0))
+        ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=1),new Paradas(cant_gente=-3),new Paradas(cant_gente=4),new Paradas(cant_gente=0)])
+        colectivo.pasajeros_subidos(0)
+        ruta.parada_actual(0)
+        assert.equals(4.7, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos(),ruta.paradasPrueba(),ruta.parada_actual()))
   }
 }
 describe "Pruebas del colectivo" {

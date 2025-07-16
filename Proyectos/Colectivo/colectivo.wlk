@@ -100,8 +100,7 @@ object colectivo {
         
         nafta_paradas_r = 0  
         genteIterable = subir 
-        
-        ruta.paradas().forEach({x => 
+        paradas.forEach({x => 
             if ((ruta.cantParadas() - iterador == (ruta.cantParadas() - paradaActual) - 1) && paradaActual >= 0) {
                 nafta_paradas_r += self.gasto_nafta(genteIterable)
                 
@@ -127,26 +126,25 @@ object colectivo {
 
     method llegaConGastoMinimoNafta() = self.gasto_nafta(1) * ruta.cantParadas() <= nafta_actual
 }
-
 class Ruta {
     var property parada_actual = 0 
     const property paradas = []
     var property cant_total_gente = 0
     var property gente_paradas = []
     var property recargarNafta = 50
-
+    var property paradasPrueba 
     method addParadas(cant_paradas) {
         cant_paradas.times({
             x => paradas.add(new Paradas(cant_minima = 10, cant_maxima = 50))
         })
-        self.set_terminals()
+        self.set_terminals(paradas)
         return self.gente_por_paradas()
     }
 
-    method set_terminals() {
-        if (paradas.size() != 0) {
-            paradas.get(0).cant_gente(0)
-            paradas.get(paradas.size() - 1).cant_gente(0)
+    method set_terminals(parada) {
+        if (parada.size() != 0) {
+            parada.get(0).cant_gente(0)
+            parada.get(parada.size() - 1).cant_gente(0)
         }
     }
 
@@ -171,10 +169,9 @@ class Ruta {
 
     method paradas_restantes() = self.cantParadas() - parada_actual
 }
-
 class Paradas {
-    var property cant_minima 
-    var property cant_maxima
+    var property cant_minima = 0
+    var property cant_maxima = 0
     var property cant_gente = cant_minima.randomUpTo(cant_maxima).round()
 
     method restar_pasajeros(pasajeros_a_restar) {
@@ -184,5 +181,6 @@ class Paradas {
     method sumar_pasajeros(pasajeros_a_sumar) {cant_gente += pasajeros_a_sumar}
 }
 
-const ruta = new Ruta()
+const ruta = new Ruta(paradasPrueba=[])
+// const colectivo = new Colectivo()
 // const hola = colectivo.avanzar()
