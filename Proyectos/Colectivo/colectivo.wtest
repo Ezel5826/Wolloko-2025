@@ -1,11 +1,10 @@
 import colectivo.*
 
 
-describe 
-"comportamiento de la nafta" {
+describe "pruebas del colectivo: comportamiento de la nafta" {
     method initialize() {
-    // const colectivo = new Colectivo()
-    const ruta = new Ruta(paradasPrueba=[])
+    const ruta = new Ruta()
+    //otra pregunta es que porque si saco la ruta del initialize se rompen algunos asserts
     colectivo.nafta_actual(10)
   }  
     test "gasto nafta normal" {
@@ -21,34 +20,31 @@ describe
         assert.equals(1,colectivo.gasto_nafta(-1))
   }
    test "gasto de nafta en una ruta normalita" {
-    ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=1),new Paradas(cant_gente=3),new Paradas(cant_gente=10),new Paradas(cant_gente=0)])
-        assert.equals(5.9, colectivo.gasto_nafta_por_ruta(ruta.paradasPrueba()))
+    ruta.paradaPruebaAdd([0,1,3,10,0])
+        assert.equals(5.9, colectivo.gasto_nafta_por_ruta())
   }
     test "gasto de nafta en una ruta mas chica" {
-      ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=1),new Paradas(cant_gente=0)])
-        assert.equals(2.1, colectivo.gasto_nafta_por_ruta(ruta.paradasPrueba()))
+      ruta.paradaPruebaAdd([0,1,0])
+        assert.equals(2.1, colectivo.gasto_nafta_por_ruta())
   }
     test "gasto de nafta en una ruta de longitud 2" {
-      ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=0)])
-        assert.equals(1, colectivo.gasto_nafta_por_ruta(ruta.paradasPrueba()))
+      ruta.paradaPruebaAdd([0,0])
+        assert.equals(0, colectivo.gasto_nafta_por_ruta())
   }
     test "gasto de nafta en una ruta de longitud 1" {
-      ruta.paradasPrueba([new Paradas(cant_gente=0)])
-        assert.equals(0, colectivo.gasto_nafta_por_ruta(ruta.paradasPrueba()))
+      ruta.paradaPruebaAdd([0])
+        assert.equals(0, colectivo.gasto_nafta_por_ruta())
   }
     test "gasto de nafta en una ruta vacia" {
-        assert.equals(0, colectivo.gasto_nafta_por_ruta(ruta.paradasPrueba()))
+        assert.equals(0, colectivo.gasto_nafta_por_ruta())
   }
     test "gasto de nafta en una ruta con personas negativas" {
-        ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=-1),new Paradas(cant_gente=9),new Paradas(cant_gente=3),new Paradas(cant_gente=0)])
-        assert.equals(6.1, colectivo.gasto_nafta_por_ruta(ruta.paradasPrueba()))
+        ruta.paradaPruebaAdd([0,-1,9,3,0])
+        assert.equals(6.1, colectivo.gasto_nafta_por_ruta())
   }
     test "gasto de nafta en una ruta enorme" {
-        const lista = []
-        23.times({x => lista.add(new Paradas(cant_gente=1))})
-        ruta.set_terminals(lista)
-        ruta.paradasPrueba(lista)
-        assert.equals(45.1, colectivo.gasto_nafta_por_ruta(ruta.paradasPrueba()))
+        ruta.paradaPruebaAdd([0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0])
+        assert.equals(45.1, colectivo.gasto_nafta_por_ruta())
   }
     test "recargar nafta sin excedente" {
         const add = 10
@@ -76,51 +72,92 @@ describe
         assert.equals(colectivo.nafta_actual(), colectivo.recargar_nafta(ruta.recargarNafta()))
   }
     test "gasto por paradas restantes normalito"  {
-        ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=1),new Paradas(cant_gente=3),new Paradas(cant_gente=10),new Paradas(cant_gente=0)])
+        ruta.paradaPruebaAdd([0,1,3,10,0])
         colectivo.pasajeros_subidos(10)
         ruta.parada_actual(1)
-        assert.equals(7.6, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos(),ruta.paradasPrueba(),ruta.parada_actual()))
+        assert.equals(7.6, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos()))
   }
     test "gasto por paradas restantes nulas" {
-        ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=-1),new Paradas(cant_gente=3),new Paradas(cant_gente=10),new Paradas(cant_gente=0)])
+        ruta.paradaPruebaAdd([0,1,3,10,0])
         colectivo.pasajeros_subidos(14)
         ruta.parada_actual(5)
-        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos(),ruta.paradasPrueba(),ruta.parada_actual()))
+        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos()))
   }
     test "gasto por paradas restantes negativas" {
-        ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=-1),new Paradas(cant_gente=3),new Paradas(cant_gente=10),new Paradas(cant_gente=0)])
+        ruta.paradaPruebaAdd([0,1,3,10,0])
         colectivo.pasajeros_subidos(14)
         ruta.parada_actual(-1)
-        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos(),ruta.paradasPrueba(),ruta.parada_actual()))
+        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos()))
   }
     test "gasto por paradas restantes = 0" {
-        ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=-1),new Paradas(cant_gente=3),new Paradas(cant_gente=10),new Paradas(cant_gente=0)])
+        ruta.paradaPruebaAdd([0,1,3,10,0])
         colectivo.pasajeros_subidos(23)
-        ruta.parada_actual(ruta.paradasPrueba().size()-1)
-        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos(),ruta.paradasPrueba(),ruta.parada_actual()))
+        ruta.parada_actual(ruta.cantParadas())
+        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos()))
   }
     test "gasto por paradas restantes con personas nulas" {
-      ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=-1),new Paradas(cant_gente=3),new Paradas(cant_gente=10),new Paradas(cant_gente=0)])
+      ruta.paradaPruebaAdd([0,1,3,10,0])
         colectivo.pasajeros_subidos(-10)
         ruta.parada_actual(0)
-        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos(),ruta.paradasPrueba(),ruta.parada_actual()))
+        assert.equals(0, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos()))
   }
     test "gasto por paradas restantes con personas nulas en las paradas" {
-        ruta.paradasPrueba([new Paradas(cant_gente=0),new Paradas(cant_gente=1),new Paradas(cant_gente=-3),new Paradas(cant_gente=4),new Paradas(cant_gente=0)])
+        ruta.paradaPruebaAdd([0,1,-3,4,0])
         colectivo.pasajeros_subidos(0)
         ruta.parada_actual(0)
-        assert.equals(4.7, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos(),ruta.paradasPrueba(),ruta.parada_actual()))
+        assert.equals(4.7, colectivo.gasto_nafta_paradas_restantes(colectivo.pasajeros_subidos()))
   }
 }
-describe "Pruebas del colectivo" {
-  test "pruebas con subir gente" {
-    colectivo.subir_gente(50)
-    assert.equals(50,colectivo.pasajeros_subidos())
+describe "Pruebas del colectivo: subir gente" {
+  //pregunta tambien que porque el method de initialice acá no funciona. tambien sobre el color del wollok, mepa que gaga
+  method initialice() {
+    const ruta = new Ruta() 
+  }
+  test "pruebas subiendo gente sin problema  con la capacidad de personas ni nafta en ruta ni gente subida" {
+    ruta.parada_actual(1)
+    ruta.paradaPruebaAdd([0,3,1,5])
+    const genteASubir = ruta.obtenerGente(ruta.parada_actual())
+    colectivo.nafta_actual(100)
+    colectivo.subir_gente(genteASubir)
+    assert.equals(genteASubir, colectivo.pasajeros_subidos())
     
   }
-  test "pruebas con subir gente " {
-    colectivo.subir_gente(1000)
-    assert.equals(100,colectivo.pasajeros_subidos())
+  test "pruebas subiendo gente sin problema  con la capacidad de personas ni nafta en ruta ni gente subida pero sobra gente en parada" {
+    ruta.parada_actual(1)
+    ruta.paradaPruebaAdd([0,3,1,5])
+    const genteASubir = colectivo.max_pasajeros() + 5
+    colectivo.nafta_actual(100)
+    colectivo.subir_gente(genteASubir)
+    assert.equals(colectivo.max_pasajeros(), colectivo.pasajeros_subidos())
+    assert.that(colectivo.genteSobrante())
+  }
+  test "pruebas subiendo gente sin problema  con la capacidad de personas ni nafta en ruta ni gente subida pero sube gente negativa y sin sobrante" {
+    ruta.parada_actual(1)
+    colectivo.nafta_actual(100)   
+    ruta.paradaPruebaAdd([0,-1,1,5])
+    const genteASubir = ruta.obtenerGente(ruta.parada_actual())
+    colectivo.subir_gente(genteASubir)
+    assert.equals(0, colectivo.pasajeros_subidos())
+    assert.notThat(colectivo.genteSobrante())
+  }
+  test "pruebas subiendo gente sin problema  con la capacidad de personas ni nafta en ruta ni gente subida pero subiendo solo 0 personas y sin sobrante" {
+    ruta.parada_actual(0)
+    colectivo.nafta_actual(100)   
+    ruta.paradaPruebaAdd([0,-1,1,5])
+    const genteASubir = ruta.obtenerGente(ruta.parada_actual())
+    colectivo.subir_gente(genteASubir)
+    assert.equals(0, colectivo.pasajeros_subidos())
+    assert.notThat(colectivo.genteSobrante())
+  }
+  test "pruebas subiendo gente sin problema  con la capacidad de personas ni nafta en ruta ni gente subida pero subiendo personas partidas y sin sobrante" {
+    ruta.parada_actual(1)
+    colectivo.nafta_actual(100)   
+    ruta.paradaPruebaAdd([0,18.4,1,5])
+    const genteASubir = ruta.obtenerGente(ruta.parada_actual())
+    colectivo.subir_gente(genteASubir)
+    console.println(ruta.gente_por_paradas())
+    assert.equals(10, colectivo.pasajeros_subidos())
+    assert.notThat(c                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               olectivo.genteSobrante())
   }
 }
 
