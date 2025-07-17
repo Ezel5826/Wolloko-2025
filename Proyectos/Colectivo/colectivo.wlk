@@ -1,33 +1,39 @@
 import wollok.vm.*
 
 object colectivo {
-    var sense = 1 
-    const property max_pasajeros = 10
-    const property max_nafta = 100
-    var property pasajeros_subidos = 0 
+    const property maxPasajeros = 10
+    const property maxNafta = 100
+    var property pasajerosSubidos = 0 
     var property genteSobrante = false
-    var property nafta_actual = max_nafta
+    var property naftaActual = maxNafta
     var genteIterable = 0 
-    var nafta_ruta = 0
-    var nafta_paradas_r = 0
+    var naftaRuta = 0
+    var naftaParadasR = 0
     var iterador = 0
+    var sense = 1 
     var vueltas = 0
 
-    //me queda por hacer el metodo de sistema o como sea uqe lo llame
-    //pero que sirva para ver todos los datos importantes en tiempo real,
-    //es como si retornace todos los datos asi el usuario puede leerlos y
-    //poder por ejemplo "en la siguiente parada no podria subirse nadie" etc
-
+    method sistema() {
+      console.println(["la cantidad de pasajeros subidos es: ",pasajerosSubidos])
+      console.println(["\n la cantidad de nafta restante es:", naftaActual , " y su consumo por avanzar fue de:", maxNafta-naftaActual])
+      console.println(["actualmente se encuentra en la parada:", ruta.paradaActual(), " la cual posee", ruta.obtenerGente(ruta.paradaActual()), "personas"])
+      console.println(["la cantidad de gente que sobró en la parada tras la subida fue de:", ruta.obtenerGente(ruta.paradaActual())])
+      console.println(["se encuentra en la vuelta Nmero: ", vueltas, " y posee un sentido", sense])
+      console.println(["la ruta en la cual está posicionado se encontró modificada a:", ruta.gentePorParadas()])
+      console.println(["la cantidad de personas restantes en su recorrido es de: ",ruta.genteTotalInRuta()])
+      console.println(["su recorrido se encuentra a ",ruta.paradasRestantes()," de terminar, ¿desea continuar?"])
+    }
     method avanzar() {  
-        if (!self.llegaConGastoMinimoNafta() && ruta.parada_actual()==0) return "la capacidad de su tanque no es suficiente para recorrer las paradas."
-        if (self.recorridoTerminado()) {self.bajar_pasajeros() return "ya ha terminado su recorrido"}
-        nafta_actual -= self.gasto_nafta(pasajeros_subidos)
-        if (ruta.parada_actual() + sense >= 0 && ruta.parada_actual() + sense <= ruta.cantParadas()) {ruta.parada_actual(ruta.parada_actual() + sense)}
-        if (ruta.obtenerGente(ruta.parada_actual()) != 0) {self.subir_gente(ruta.obtenerGente(ruta.parada_actual()))}
+        if (!self.llegaConGastoMinimoNafta() && ruta.paradaActual()==0) return false
+        if (self.recorridoTerminado()) {self.bajarPasajeros() return false}
+        naftaActual -= self.gastoNafta(pasajerosSubidos)
+        if (ruta.paradaActual() + sense >= 0 && ruta.paradaActual() + sense <= ruta.cantParadas()) {ruta.paradaActual(ruta.paradaActual() + sense)}
+        if (ruta.obtenerGente(ruta.paradaActual()) != 0) {self.subirGente(ruta.obtenerGente(ruta.paradaActual()))}
         self.VolverNoSobranPasajeros()
         self.volverCapacidadLlena()
-        self.bajar_pasajeros()
-        return ["Pasajeros Subidos:", pasajeros_subidos, "nafta actual:" , nafta_actual, "sentido:", sense, "vueltas:" , vueltas, "parada actual:", ruta.parada_actual()]
+        self.bajarPasajeros()
+        self.sistema()
+        return true
     }
 
     method VolverNoSobranPasajeros() {
@@ -39,81 +45,78 @@ object colectivo {
     method volverCapacidadLlena() {
         //añadir logica que te permita ver is te conviene ams ir de un lado que del otro, eso en tema de nafta. por ejemplo etas en la 4 y son 9, quiza por la nafta te convenga ir mas al inicio que a la terminal.
         
-        if((pasajeros_subidos==max_pasajeros && vueltas!=0)&& sense!=1) sense*=-1
+        if((pasajerosSubidos==maxPasajeros && vueltas!=0)&& sense!=1) sense*=-1
 
     }
-    method pruebas(float){
-        float.floor()
-        return float
 
-    }
-    method bajar_pasajeros() {
-        if (self.recorridoTerminado() || (ruta.parada_actual() == 0 && vueltas != 0) || self.llegaTerminal()) {
-            ruta.parada(ruta.parada_actual()).sumar_pasajeros(pasajeros_subidos)
-            pasajeros_subidos = 0
+    method bajarPasajeros() {
+        if (self.recorridoTerminado() || (ruta.paradaActual() == 0 && vueltas != 0) || self.llegaTerminal()) {
+            ruta.parada(ruta.paradaActual()).sumarPasajeros(pasajerosSubidos)
+            pasajerosSubidos = 0
             
-            if (!self.recorridoTerminado() && ruta.parada_actual()==ruta.cantParadas()) {
+            if (!self.recorridoTerminado() && ruta.paradaActual()==ruta.cantParadas()) {
                 sense*=-1
-                vueltas += 1               
+                vueltas += 1
             }
             
-            self.recargar_nafta(ruta.recargarNafta())
+            self.recargarNafta(ruta.recargarNafta())
         }
     }
+    method senseVuletas() = [sense,vueltas] 
 
-    method subir_gente(cantidad_pasajeros) {
+    method subirGente(cantidadPasajeros) {
 
-        if (pasajeros_subidos <= 0)  pasajeros_subidos *= 0
+        if (pasajerosSubidos <= 0)  pasajerosSubidos *= 0
         if (self.llegaConGastoMinimoNafta()){
-        if ((self.gasto_nafta_paradas_restantes(pasajeros_subidos + cantidad_pasajeros.floor()) <= nafta_actual) && (pasajeros_subidos + cantidad_pasajeros.floor() <= max_pasajeros) && (ruta.parada_actual() >= 0 && ruta.parada_actual() <= ruta.cantParadas()) && ( cantidad_pasajeros >= 0)) {
+        if ((self.gastoNaftaParadasRestantes(pasajerosSubidos + cantidadPasajeros.floor()) <= naftaActual) && (pasajerosSubidos + cantidadPasajeros.floor() <= maxPasajeros) && (ruta.paradaActual() >= 0 && ruta.paradaActual() <= ruta.cantParadas()) && ( cantidadPasajeros >= 0)) {
             
-            pasajeros_subidos += cantidad_pasajeros.floor()
+            pasajerosSubidos += cantidadPasajeros.floor()
 
-            ruta.parada(ruta.parada_actual()).restar_pasajeros(cantidad_pasajeros)
+            ruta.parada(ruta.paradaActual()).restarPasajeros(cantidadPasajeros)
             
-            if (ruta.obtenerGente(ruta.parada_actual()) != 0) genteSobrante = true
+            if (ruta.obtenerGente(ruta.paradaActual()) != 0) genteSobrante = true
     
-        } else if(cantidad_pasajeros >= 0) {
-             self.subir_gente(cantidad_pasajeros - 1)
+        } else if(cantidadPasajeros >= 0) {
+             self.subirGente(cantidadPasajeros - 1)
         }}
     }
 
-    method recargar_nafta(naftaRecargar) {
-        if (naftaRecargar <= 0) return nafta_actual
-        if (nafta_actual + naftaRecargar < max_nafta) {
-            nafta_actual += naftaRecargar
+    method recargarNafta(naftaRecargar) {
+        if (naftaRecargar <= 0) return naftaActual
+        if (naftaActual + naftaRecargar < maxNafta) {
+            naftaActual += naftaRecargar
         } else {
-            nafta_actual = max_nafta
+            naftaActual = maxNafta
         }
-        return nafta_actual
+        return naftaActual
     }
 
-    method gasto_nafta_por_ruta() {
-        nafta_ruta = 0
-        if (ruta.cantParadas() <= 1) return nafta_ruta
+    method gastoNaftaPorRuta() {
+        naftaRuta = 0
+        if (ruta.cantParadas() <= 1) return naftaRuta
         ruta.paradas().forEach({
-            x => if (x.cant_gente() >= 0) {
-                genteIterable += x.cant_gente() 
+            x => if (x.cantGente() >= 0) {
+                genteIterable += x.cantGente() 
             } 
-            nafta_ruta += self.gasto_nafta(genteIterable)
+            naftaRuta += self.gastoNafta(genteIterable)
         })
         
-        nafta_ruta -= self.gasto_nafta(genteIterable)
+        naftaRuta -= self.gastoNafta(genteIterable)
         
         genteIterable = 0 
-        return nafta_ruta
+        return naftaRuta
     }
 
-    method gasto_nafta_paradas_restantes(subir) {
-        if (subir < 0 || ruta.parada_actual() < 0 || ruta.parada_actual() >= 5) return 0
+    method gastoNaftaParadasRestantes(subir) {
+        if (subir < 0 || ruta.paradaActual() < 0 || ruta.paradaActual() >= 5) return 0
         
-        nafta_paradas_r = 0  
+        naftaParadasR = 0  
         genteIterable = subir 
         ruta.paradas().forEach({x => 
-            if ((ruta.cantParadas() - iterador == ruta.paradas_restantes() - 1) && ruta.parada_actual() >= 0) {
-                nafta_paradas_r += self.gasto_nafta(genteIterable)
+            if ((ruta.cantParadas() - iterador == ruta.paradasRestantes() - 1) && ruta.paradaActual() >= 0) {
+                naftaParadasR += self.gastoNafta(genteIterable)
                 
-                if (x.cant_gente() >= 0) genteIterable += x.cant_gente()
+                if (x.cantGente() >= 0) genteIterable += x.cantGente()
             } else {
                 iterador += 1
             }
@@ -121,81 +124,80 @@ object colectivo {
 
         genteIterable = 0 
         iterador = 0 
-        return nafta_paradas_r
+        return naftaParadasR
     }
 
-    method gasto_nafta(pasajeros) = if (pasajeros >= 0) {1 + 0.1 * pasajeros.floor()} else {1}
 
-    method recorridoTerminado() = ruta.parada_actual() == ruta.cantParadas() && !genteSobrante
+    method gastoNafta(pasajeros) = if (pasajeros >= 0) {1 + 0.1 * pasajeros.floor()} else {1}
 
-    method llegaTerminal() = ruta.parada_actual() == ruta.cantParadas()
+    method recorridoTerminado() = ruta.paradaActual() == ruta.cantParadas() && !genteSobrante
 
-    method llegaConGastoMinimoNafta() = self.gasto_nafta(1) * ruta.cantParadas()-1 <= nafta_actual
+    method llegaTerminal() = ruta.paradaActual() == ruta.cantParadas()
+
+    method llegaConGastoMinimoNafta() = self.gastoNafta(1) * ruta.cantParadas()-1 <= naftaActual
 }
 class Ruta {
-    var property parada_actual = 0 
+    var property paradaActual = 0 
     const property paradas = []
-    var property cant_total_gente = 0
-    var property gente_paradas = []
+    var property cantTotalGente = 0
+    var property genteParadas = []
     var property recargarNafta = 50
 
     method cantParadas() = paradas.size() - 1
 
     method parada(paradaUbicada) = paradas.get(paradaUbicada) 
 
-    method obtenerGente(paradaUbicada) = self.parada(paradaUbicada).cant_gente()
+    method obtenerGente(paradaUbicada) = self.parada(paradaUbicada).cantGente()
 
-    method paradas_restantes() = self.cantParadas() - parada_actual
+    method paradasRestantes() = self.cantParadas() - paradaActual
 
-    method addParadas(cant_paradas) {
-        cant_paradas.times({
-            x => paradas.add(new Paradas(cant_minima = 10, cant_maxima = 50))
+    method addParadas(cantParadas) {
+        cantParadas.times({
+            x => paradas.add(new Paradas(cantMinima = 10, cantMaxima = 50))
         })
-        self.set_terminals()
-        return self.gente_por_paradas()
+        self.setTerminals()
+        return self.gentePorParadas()
     }
 
-    method paradaPruebaAdd(paradaAñadir) {
-        paradaAñadir.forEach({
-            x => paradas.add(new Paradas(cant_gente = x))
+    method paradaPruebaAdd(paradaAniadir) {
+        paradaAniadir.forEach({
+            x => paradas.add(new Paradas(cantGente = x))
             })
-            self.set_terminals()
-            return self.gente_por_paradas()
+            self.setTerminals()
+            return self.gentePorParadas()
     } 
 
-    method gente_por_paradas() {
-        gente_paradas = [] 
-        paradas.forEach({parada => gente_paradas.add(parada.cant_gente())})
-        return gente_paradas
+    method gentePorParadas() {
+        genteParadas = [] 
+        paradas.forEach({parada => genteParadas.add(parada.cantGente())}) 
+        return genteParadas
     }
     
-    method set_terminals() {
+    method setTerminals() {
         if (self.cantParadas() != 0) {
-            self.parada(0).cant_gente(0)
-            self.parada(self.cantParadas()).cant_gente(0)
+            self.parada(0).cantGente(0)
+            self.parada(self.cantParadas()).cantGente(0)
         }
     }
 
     method genteTotalInRuta() {
-        cant_total_gente = 0 
-        paradas.forEach({parada => cant_total_gente += parada.cant_gente()})
-        cant_total_gente -= self.obtenerGente(paradas.size() - 1)
-        return cant_total_gente
+        cantTotalGente = 0 
+        paradas.forEach({parada => cantTotalGente += parada.cantGente()})
+        cantTotalGente -= self.obtenerGente(paradas.size() - 1)
+        return cantTotalGente
     }
 }
 
 class Paradas {
-    var property cant_minima = 0
-    var property cant_maxima = 0
-    var property cant_gente = cant_minima.randomUpTo(cant_maxima).round()
+    var property cantMinima = 0
+    var property cantMaxima = 0
+    var property cantGente = cantMinima.randomUpTo(cantMaxima).round()
 
-    method restar_pasajeros(pasajeros_a_restar) {
-        if (cant_gente - pasajeros_a_restar >= 0) {cant_gente -= pasajeros_a_restar}
+    method restarPasajeros(pasajerosARestar) {
+        if (cantGente - pasajerosARestar >= 0) {cantGente -= pasajerosARestar}
     }
 
-    method sumar_pasajeros(pasajeros_a_sumar) {cant_gente += pasajeros_a_sumar}
+    method sumarPasajeros(pasajerosASumar) {cantGente += pasajerosASumar}
 }
 
 const ruta = new Ruta()
-// const colectivo = new Colectivo()
-// const hola = colectivo.avanzar()
