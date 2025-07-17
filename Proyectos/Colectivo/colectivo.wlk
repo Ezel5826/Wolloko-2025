@@ -42,6 +42,11 @@ object colectivo {
         if((pasajeros_subidos==max_pasajeros && vueltas!=0)&& sense!=1) sense*=-1
 
     }
+    method pruebas(float){
+        float.floor()
+        return float
+
+    }
     method bajar_pasajeros() {
         if (self.recorridoTerminado() || (ruta.parada_actual() == 0 && vueltas != 0) || self.llegaTerminal()) {
             ruta.parada(ruta.parada_actual()).sumar_pasajeros(pasajeros_subidos)
@@ -58,17 +63,19 @@ object colectivo {
 
     method subir_gente(cantidad_pasajeros) {
 
-        if ((self.gasto_nafta_paradas_restantes(pasajeros_subidos + cantidad_pasajeros.floor()) <= nafta_actual) && (pasajeros_subidos + cantidad_pasajeros.floor() <= max_pasajeros) && (ruta.parada_actual() != 0 && ruta.parada_actual() != ruta.cantParadas()) && ( cantidad_pasajeros >= 0)) {
+        if (pasajeros_subidos <= 0)  pasajeros_subidos *= 0
+        if (self.llegaConGastoMinimoNafta()){
+        if ((self.gasto_nafta_paradas_restantes(pasajeros_subidos + cantidad_pasajeros.floor()) <= nafta_actual) && (pasajeros_subidos + cantidad_pasajeros.floor() <= max_pasajeros) && (ruta.parada_actual() >= 0 && ruta.parada_actual() <= ruta.cantParadas()) && ( cantidad_pasajeros >= 0)) {
             
             pasajeros_subidos += cantidad_pasajeros.floor()
-            
+
             ruta.parada(ruta.parada_actual()).restar_pasajeros(cantidad_pasajeros)
-            if (ruta.obtenerGente(ruta.parada_actual()) != 0) {
-                genteSobrante = true
-            }
+            
+            if (ruta.obtenerGente(ruta.parada_actual()) != 0) genteSobrante = true
+    
         } else if(cantidad_pasajeros >= 0) {
              self.subir_gente(cantidad_pasajeros - 1)
-        }
+        }}
     }
 
     method recargar_nafta(naftaRecargar) {
