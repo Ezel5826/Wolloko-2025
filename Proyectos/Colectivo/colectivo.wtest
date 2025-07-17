@@ -117,6 +117,7 @@ describe "Pruebas del colectivo: subir gente" {
     ruta.paradaActual(1)
     ruta.paradaPruebaAdd([0,3,1,5])
     colectivo.naftaActual(100)
+    const cantTotal=ruta.genteTotalInRuta()
     const genteASubir = ruta.obtenerGente(ruta.paradaActual())
     colectivo.subirGente(genteASubir)
     assert.equals(genteASubir, colectivo.pasajerosSubidos())
@@ -126,8 +127,9 @@ describe "Pruebas del colectivo: subir gente" {
   }
   test "pruebas subiendo gente sin problema  con la capacidad de personas ni nafta en ruta ni gente subida pero sobra gente en parada" {
     ruta.paradaActual(1)
-    ruta.paradaPruebaAdd([0,3,1,5])
-    const genteASubir = colectivo.maxPasajeros() + 5
+    ruta.paradaPruebaAdd([0,colectivo.maxPasajeros() + 5,1,5])
+    const cantTotal=ruta.genteTotalInRuta()
+    const genteASubir = ruta.obtenerGente(ruta.paradaActual())
     colectivo.naftaActual(100)
     colectivo.subirGente(genteASubir)
     assert.equals(colectivo.maxPasajeros(), colectivo.pasajerosSubidos())
@@ -141,7 +143,7 @@ describe "Pruebas del colectivo: subir gente" {
     const cantTotal=ruta.genteTotalInRuta()
     const genteASubir = ruta.obtenerGente(ruta.paradaActual())
     colectivo.subirGente(genteASubir)
-    assert.notEquals(cantTotal, ruta.genteTotalInRuta())
+    assert.equals(cantTotal, ruta.genteTotalInRuta())
     assert.equals(0, colectivo.pasajerosSubidos())
     assert.notThat(colectivo.genteSobrante())
   }
@@ -152,7 +154,7 @@ describe "Pruebas del colectivo: subir gente" {
     const cantTotal=ruta.genteTotalInRuta()
     const genteASubir = ruta.obtenerGente(ruta.paradaActual())
     colectivo.subirGente(genteASubir)
-    assert.notEquals(cantTotal, ruta.genteTotalInRuta())
+    assert.equals(cantTotal, ruta.genteTotalInRuta())
     assert.equals(0, colectivo.pasajerosSubidos())
     assert.notThat(colectivo.genteSobrante())
   }
@@ -178,11 +180,11 @@ describe "Pruebas del colectivo: subir gente" {
   }
   test "pruebas subiendo gente sin problema con la capacidad de personas ni nafta en ruta sin gente subida y en parada inexistente" {
     ruta.paradaActual(5) colectivo.naftaActual(100) ruta.paradaPruebaAdd([0,5,1,5]) colectivo.pasajerosSubidos(-10)
-    const genteASubir = 5
+    const genteASubir = ruta.obtenerGente(1)
     const cantTotal=ruta.genteTotalInRuta()
     colectivo.subirGente(genteASubir)
     assert.equals(0, colectivo.pasajerosSubidos())
-  assert.notEquals(cantTotal, ruta.genteTotalInRuta())
+    assert.equals(cantTotal, ruta.genteTotalInRuta())
     assert.notThat(colectivo.genteSobrante())
   }
     test "pruebas subiendo gente sin problema con la capacidad de personas sin gente subida y nafta justa" {
@@ -202,7 +204,7 @@ describe "Pruebas del colectivo: subir gente" {
     assert.notEquals(colectivo.gastoNaftaParadasRestantes(genteASubir), colectivo.naftaActual())
     colectivo.subirGente(genteASubir)
     assert.equals(0, colectivo.pasajerosSubidos())
-  assert.notEquals(cantTotal, ruta.genteTotalInRuta())
+    assert.equals(cantTotal, ruta.genteTotalInRuta())
     assert.notThat(colectivo.genteSobrante())
   }
     test "pruebas subiendo gente sin problema con la capacidad de personas sin gente subida, gente sobramte y nafta justa" {
