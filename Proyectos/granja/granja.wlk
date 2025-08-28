@@ -3,11 +3,14 @@
 //se enfermen cuando estan con otras diferencias por tipos de animales y añadir una zona de cuarentena. tenes mas posibilidad de que se cure con 
 //las demas,pero a diferencia de la cuarentena, tambien tenes chanse de que se contagien otras, asimismo, en la cuarentena no se contagian con otras
 //pero tiene menos chanse de curado. todo esto apartir de los 3 dias.
-class Kikiriki inherits Animals{
+//tambien agregar un objeto posicion que me permita saber la posicion actual y en base a eso tengo que saber donde está y definir un radio para enfermar
+
+
+class Kikiriki inherits Animals(peso=30, vacunado = false, muerto = false, hambriento = true, bebido = false, enfermo = false,mataderojeje = false, diasHabiles = 10){
 
 }
 
-class Oink inherits Animals{
+class Oink inherits Animals(peso=30, vacunado = false, muerto = false, hambriento = true, bebido = false, enfermo = false,mataderojeje = false,diasHabiles = 20){
     var property pesoMinimo = 200
     var property vecesRestantes = 3
     method vacunarse() {
@@ -27,7 +30,7 @@ class Oink inherits Animals{
     }
 
 }
-class Muuu inherits Animals{
+class Muuu inherits Animals(peso=50, vacunado = false, muerto = false, hambriento = true, bebido = false, enfermo = false,mataderojeje = false, diasHabiles = 30){
     var property ciclos = 1
     var property pesoMinimo = 400
 
@@ -35,7 +38,9 @@ class Muuu inherits Animals{
       if (ciclos!=0){ciclos-=1 vacunado=true}
     }
     method caminar(cantidadRecorrida) {
-      peso += cantidadRecorrida/5
+        if (peso - cantidadRecorrida/5 > 0)
+        peso -= cantidadRecorrida/5
+        
     }
 
     override method comer(cantidad) {
@@ -60,6 +65,9 @@ class Animals {
     var property diasEnfermo = 0
     var property mataderojeje = false
     var property diasHabiles 
+    var property diasVivo = 0 
+    var property ubicacion  
+    var property posicion 
     method comer(cantidadComida) {}
     method abrevar() {}
     method morir() {
@@ -67,18 +75,29 @@ class Animals {
         if (enfermo){console.println(["su animal esta enfermo, le quedan", diasHabiles-diasEnfermo,"de vida"])}
     }
     method enfermarse() {
-      
+        if(!enfermo){enfermo=true}
+    }
+    method curarse(){
+        const num = 0.roundUpTo(10).floor()
+        if (!enfermo){return true}
+        
+        if (ubicacion != "Cuarentena" && num <= 4 ){
+            enfermo=false
+            return true
+        }
+        return false
+  
     }
 }
 class Granja {
     const property animales = [] 
     method CrearAnimales(cantidad,clase) {
 
-    if (clase=="oink") cantidad.times({i => animales.add(new Oink(peso=30, vacunado = false, muerto = false, hambriento = true, bebido = false, enfermo = false,mataderojeje = false,diasHabiles = 20))})
+    if (clase=="oink") cantidad.times({i => animales.add(new Oink())})
 
-    else if (clase== "muuu") cantidad.times({i => animales.add(new Muuu(peso=50,ciclos=1, vacunado = false, muerto = false, hambriento = true, bebido = false, enfermo = false,mataderojeje = false, diasHabiles = 30))})
+    else if (clase== "muuu") cantidad.times({i => animales.add(new Muuu())})
 
-    else if (clase=="kikiriki") cantidad.times({i => animales.add(new Kikiriki(peso=30, vacunado = false, muerto = false, hambriento = true, bebido = false, enfermo = false,mataderojeje = false, diasHabiles = 10))})
+    else if (clase=="kikiriki") cantidad.times({i => animales.add(new Kikiriki())})
 
     else {
         console.println("el animal que quieres agregar a la granja no se encuentra en nuestro terreno")
