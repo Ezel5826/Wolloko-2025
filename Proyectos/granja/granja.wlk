@@ -1,53 +1,65 @@
+import Proyectos.Colectivo.colectivo.*
 //me quedó pendiente la clase de gallina, lograr hacer el metodo de enfermarse, 
 //que se pueda enfermar en diferentes aspectos, que te permita ver stats y hacer una especie de matadero tambien que 
 //se enfermen cuando estan con otras diferencias por tipos de animales y añadir una zona de cuarentena. tenes mas posibilidad de que se cure con 
 //las demas,pero a diferencia de la cuarentena, tambien tenes chanse de que se contagien otras, asimismo, en la cuarentena no se contagian con otras
 //pero tiene menos chanse de curado. todo esto apartir de los 3 dias.
 //tambien agregar un objeto posicion que me permita saber la posicion actual y en base a eso tengo que saber donde está y definir un radio para enfermar
+//estoy haciendo la asignaicon de las enfermedades para ver si afecta o no al animal.
+class Kikiriki inherits Animals(posicion=0,ubicacion="corral",peso=30, vacunado = false, muerto = false, hambriento = true, bebido = false, enfermo = false,mataderojeje = false, diasHabiles = 10){
 
-
-class Kikiriki inherits Animals(peso=30, vacunado = false, muerto = false, hambriento = true, bebido = false, enfermo = false,mataderojeje = false, diasHabiles = 10){
+    override method comer(cantidad,comida) {
+        peso+=cantidad    
+    }
 
 }
 
-class Oink inherits Animals(peso=30, vacunado = false, muerto = false, hambriento = true, bebido = false, enfermo = false,mataderojeje = false,diasHabiles = 20){
+class Oink inherits Animals(posicion=0,ubicacion="chiquero",peso=30, vacunado = false, muerto = false, hambriento = true, bebido = false, enfermo = false,mataderojeje = false,diasHabiles = 20){
     var property pesoMinimo = 200
     var property vecesRestantes = 3
+    const comidaTolerada = comida.ToleradaCerdo()
     method vacunarse() {
         vacunado=true      
     }
+    
 
-    override method comer(cantidad) {
+
+    override method comer(cantidad,comida) {
         if (!bebido) {console.println("el cerdo debe ser abrevado para que pueda comer")}
         else if (peso<=pesoMinimo) {hambriento = false}
         else {mataderojeje = true}
         peso += cantidad/2
         if(vecesRestantes == 0) {bebido = false}
         else {vecesRestantes -= 1}
+        if (comidaTolerada.count({comidaV => comidaV==comida.type()}) != 1){
+            self.EnfermarPorComer(comida.type())
+        }
     }
     override method abrevar() {
         bebido=true
     }
 
 }
-class Muuu inherits Animals(peso=50, vacunado = false, muerto = false, hambriento = true, bebido = false, enfermo = false,mataderojeje = false, diasHabiles = 30){
+class Muuu inherits Animals(posicion=0,ubicacion="pastal", peso=50, vacunado = false, muerto = false, hambriento = true, bebido = false, enfermo = false,mataderojeje = false, diasHabiles = 30){
     var property ciclos = 1
     var property pesoMinimo = 400
-
+    var property comidaTolerada = comida.ToleradaVaca()
     method vacunarse() {
       if (ciclos!=0){ciclos-=1 vacunado=true}
     }
     method caminar(cantidadRecorrida) {
         if (peso - cantidadRecorrida/5 > 0)
-        peso -= cantidadRecorrida/5
-        
+        peso -= cantidadRecorrida/5        
     }
-
-    override method comer(cantidad) {
+    override method comer(cantidad,comida) {
         if (!bebido) {console.println("la vaca debe ser abrevada para que pueda comer")}
         else if (peso<=pesoMinimo) {hambriento = false}
+        else if(diasVivo>=60 && peso>=pesoMinimo){mataderojeje = true}
         peso += cantidad/2
         bebido=false
+        if (comidaTolerada.count({comidaV => comidaV==comida.type()}) != 1){
+            self.EnfermarPorComer(comida.type())
+        }
     }
     override method abrevar() {
       bebido=true
@@ -68,7 +80,9 @@ class Animals {
     var property diasVivo = 0 
     var property ubicacion  
     var property posicion 
-    method comer(cantidadComida) {}
+    const numeroComidaEnfermo = 1
+
+    method comer(cantidad,comida) {}
     method abrevar() {}
     method morir() {
         if (diasHabiles < diasEnfermo && enfermo){muerto=true enfermo=false console.println("su animal ha muerto")}
@@ -76,24 +90,47 @@ class Animals {
     }
     method enfermarse() {
         if(!enfermo){enfermo=true}
+         
     }
-    method curarse(){
-        const num = 0.roundUpTo(10).floor()
-        if (!enfermo){return true}
+    method EnfermarPorComer(comida) {//comida= comida.tipe
+            const num = 0.roundUpTo(10).floor()
+            if (num==numeroComidaEnfermo){
+                self.enfermarse()
+            }
+    }
+    
+    method kind (instacia) {
+    const enfermedad,tipoAfectable = enfermedades.elegirEnfermedad()
+    //a ver si funciona esta
+        if (instacia.kindName() == new Muuu().kindName()) {
+
+        }else if (instacia.kindName() == new Kikiriki().kindName()){
+
+        }else if (instacia.kindName() == new Oink().kindName()){
+
+        }else{
+
+        }}
+
+    // method curarse(){
+    //     const num = 0.roundUpTo(10).floor()
+    //     if (!enfermo){return true}
         
-        if (ubicacion != "Cuarentena" && num <= 4 ){
-            enfermo=false
-            return true
-        }
-        return false
+    //     if (ubicacion != "Cuarentena" && num <= 4 ){
+    //         enfermo=false
+    //         return true
+    //     }
+    //     return false
   
-    }
+    // }
 }
 class Granja {
     const property animales = [] 
+    var property days =  0 
+    var property comida = ["comida"]
     method CrearAnimales(cantidad,clase) {
 
-    if (clase=="oink") cantidad.times({i => animales.add(new Oink())})
+    if (clase=="oink") const corral = [] cantidad.times({i => animales.add(new Oink())})
 
     else if (clase== "muuu") cantidad.times({i => animales.add(new Muuu())})
 
@@ -107,5 +144,14 @@ class Granja {
 
 }
 object matadero {}
+
+class  Comida {}
+
+const comida = new Comida() 
+
+class Enfermedades{}
+
+const enfermedades = new Enfermedades()
+
 
 const granja = new Granja()
